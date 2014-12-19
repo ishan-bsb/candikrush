@@ -635,4 +635,12 @@ public class Utils {
         }
         return bitrate;
     }
+
+    public static String get10DigitMsisdn(String msisdn) {
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(msisdn) && msisdn.length() > 10) {
+            return msisdn.substring(msisdn.length() - 10, msisdn.length());
+        }
+        return msisdn;
+
+    }
 }
