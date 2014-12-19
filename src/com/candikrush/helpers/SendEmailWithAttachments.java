@@ -125,7 +125,7 @@ public class SendEmailWithAttachments {
 			email.setAuthenticator(new DefaultAuthenticator("ishan@bsb.in", ""));
 			email.setSSLOnConnect(true);
 
-			String name = "invite.ics";
+			String name = subject;
 			String contentType = String.format("text/calendar; name="+name);
 			System.out.println(contentType);
 			email.attach(new ByteArrayDataSource(attachmentData, contentType),
