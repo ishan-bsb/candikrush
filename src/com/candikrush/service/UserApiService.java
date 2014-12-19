@@ -29,6 +29,9 @@ public class UserApiService {
     RoleApiService       roleApiService;
     @Autowired PropertyReader propertyReader;
 
+    @Autowired
+    LoginService loginService;
+    
     private final String baseUrl = "http://transcoder-music-dev-1492533402.ap-southeast-1.elb.amazonaws.com/v1/user/";
 //    private final String baseUrl = "http://54.227.42.232:8080/v1/user/";
 //    private final String baseUrl = propertyReader.loadProperty("userProfile");
@@ -103,7 +106,7 @@ public class UserApiService {
         user.setUsername(username);
         user.setPassword(password);
         RestTemplate restApi = new RestTemplate();
-        return restApi.postForObject(baseUrl + "authenticate", user, Boolean.class);
+        return loginService.authenticateUser(username,password);
     }
 
 }
