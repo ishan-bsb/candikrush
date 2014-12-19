@@ -40,13 +40,16 @@ public class CVParsingService {
 
     RestTemplate          restApi = new RestTemplate();
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     private void processResumes() {
+        //createTestResume();
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
             String parsed = getParsedResume(resume.getFilePath(), fileName);
             processCV(parsed, resume.getFilePath(), resume.getEmail(), resume.getCreationDate(), resume.getCctc(), resume.getEctc(), resume.getNoticePeriod());
+            resume.setProcessed(true);
+            mongoCMSDB.save(resume);
         }
     }
 
@@ -66,32 +69,6 @@ public class CVParsingService {
         }
         logger.info("Response : " + xml);
         return xml;
-    }
-
-    private byte[] loadFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-        long length = file.length();
-        byte[] bytes = new byte[(int) length];
-        int offset = 0;
-        int numRead = 0;
-        while(offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-            offset += numRead;
-        }
-        if(offset < bytes.length) {
-            is.close();
-            throw new IOException("Could not completely read file " + file.getName());
-        }
-        System.out.println(offset);
-        is.close();
-        return bytes;
-    }
-
-    public static void main(String[] args) throws Exception {
-        CVParsingService ps = new CVParsingService();
-        // ps.getParsedResume("/Users/jasdeep/Downloads/BSB final resumes 2/Anshul Sharma_new-2.pdf",
-        // "Anshul Sharma_new-2.pdf");
-        String resumeXml = new String(ps.loadFile(new File("/Users/jasdeep/Desktop/anshul.xml")));
-        ps.processCV(resumeXml, "/Users/jasdeep/Desktop/anshul.xml", "jasdeep@bsb.in", 0L, 400000, 600000, 60);
     }
 
     public boolean processCV(String resumeXML, String path, String sourceId, long postTimestamp, int cctc, int ectc, int np) {
@@ -208,5 +185,41 @@ public class CVParsingService {
             return false;
         }
         return true;
+    }
+
+    private void createTestResume() {
+        UploadedResumeDetails res = new UploadedResumeDetails();
+        res.setCctc(400000);
+        res.setEctc(600000);
+        res.setNoticePeriod(60);
+        res.setCreationDate(System.currentTimeMillis());
+        res.setEmail("search_meshicreations");
+        res.setFilePath("/Users/jasdeep/Downloads/BSB final resumes 2/Anshul Sharma_new-2.pdf");
+        mongoCMSDB.save(res);
+    }
+
+    private byte[] loadFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+        long length = file.length();
+        byte[] bytes = new byte[(int) length];
+        int offset = 0;
+        int numRead = 0;
+        while(offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+            offset += numRead;
+        }
+        if(offset < bytes.length) {
+            is.close();
+            throw new IOException("Could not completely read file " + file.getName());
+        }
+        System.out.println(offset);
+        is.close();
+        return bytes;
+    }
+
+    public static void main(String[] args) throws Exception {
+        CVParsingService ps = new CVParsingService();
+        String resumeXml = ps.getParsedResume("/Users/jasdeep/Downloads/BSB final resumes 2/Anshul Sharma_new-2.pdf", "Anshul Sharma_new-2.pdf");
+//        String resumeXml = new String(ps.loadFile(new File("/Users/jasdeep/Desktop/anshul.xml")));
+        ps.processCV(resumeXml, "/Users/jasdeep/Desktop/anshul.xml", "jasdeep@bsb.in", 0L, 400000, 600000, 60);
     }
 }

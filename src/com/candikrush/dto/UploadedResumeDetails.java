@@ -2,6 +2,8 @@ package com.candikrush.dto;
 
 public class UploadedResumeDetails {
 
+    private String  id;
+
     private String  filePath;
 
     private int     cctc;
@@ -75,6 +77,14 @@ public class UploadedResumeDetails {
     @Override
     public String toString() {
         return "UploadedResumeDetails [filePath=" + filePath + ", cctc=" + cctc + ", ectc=" + ectc + ", email=" + email + ", noticePeriod=" + noticePeriod + ", creationDate=" + creationDate + "]";
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }
