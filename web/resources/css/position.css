@@ -1,0 +1,98 @@
+.outer-cont-pos{
+width:40px;
+height:30px;
+position:absolute;
+float:left;
+}
+.fbook-pos{
+position:absolute;
+width:435px; 
+height:420px;
+display:none; 
+z-index:5; 
+background:#fff;
+left:106px;
+bottom:28px;
+border-bottom:1px solid #a4a4a4;
+}
+.twitter-pos{
+position:absolute; 
+	width:545px; 
+	height:484px;
+	display:none; 
+	z-index:5;
+	left:-110px;
+	bottom:28px; 
+	border-bottom:1px solid #a4a4a4;
+}
+.profile-pos{
+position:absolute; 
+	width:412px; 
+	height:485px;
+	display:none; 
+	z-index:5; 
+	left:-1px; 
+	bottom:24px;
+	border-bottom:1px solid #a4a4a4;
+}
+.recent-pos{
+position:absolute; 
+	width:412px; 
+	height:485px;
+	display:none; 
+	z-index:5; 
+	left:10px; 
+	bottom:28px;
+	border-bottom:1px solid #a4a4a4;
+	}
+	.linked-pos{
+position:absolute; 
+	width:412px; 
+	height:485px;
+	display:none; 
+	z-index:5; 
+	left:10px; 
+	bottom:28px;
+	border-bottom:1px solid #a4a4a4;
+	}
+.rss-pos{
+position:absolute; 
+width:412px; 
+height:485px;
+display:none; 
+z-index:5; 
+left:217px; 
+bottom:28px;
+border-bottom:1px solid #a4a4a4;
+}
+.deals-pos{
+position:absolute;
+width:412px;
+height:510px;
+display:none;
+z-index:5;
+left:116px;
+bottom:28px;
+border-bottom:1px solid #a4a4a4;
+}
+
+.news-pos{
+position:absolute;
+width:412px; 
+height:485px; 
+display:none; 
+z-index:5;
+left:222px; 
+bottom:28px;
+border-bottom:1px solid #a4a4a4;
+}
+.contact-pos{
+position:absolute; 
+width:412px; 
+height:390px;
+display:none; 
+z-index:5;
+bottom:28px;
+left:323px; 
+border-bottom:1px solid #a4a4a4; 
+}

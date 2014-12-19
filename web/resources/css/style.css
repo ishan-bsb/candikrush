@@ -1,0 +1,343 @@
+.subhead {
+    padding-bottom: 0;
+    margin-bottom: 9px;
+}
+
+.jumbotron {
+    position: relative;
+}
+
+.label-modified{	
+	display: inline;
+	padding: .2em .1em .3em;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1;
+	color: black;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+}
+
+body {
+    position: relative;
+    padding-top: 90px;
+    background-color:
+        white;
+    background-position: 0 40px;
+}
+
+/* .footer {
+    margin-top: 45px;
+    position:absolute;
+    bottom:0;
+    padding: 35px 0 36px;
+    border-top: 1px solid #E5E5E5;
+} */
+
+.package-container {
+	width:1300px;
+}
+
+#calendar_header { overflow: hidden; font-size: 1.4em; padding: 2px }
+#calendar_header div { float: left; font-weight: bold; font-size: 20px; }
+#calendar .calendar-day .today { background-color: #f8f6c1 !important; }
+#calendar .calendar-day .day-of-month {
+    filter:alpha(opacity=10);
+    -moz-opacity:.08;
+    opacity:.08;
+    font-size: 100px;
+    z-index: 0;
+    position: relative;
+    top: 30px;
+    float: right;}
+.day b{
+    font-size:11px;
+}
+.icon {
+    width: 16px;
+    height: 16px;
+    padding-right: 2px;
+    padding-left: 2px;
+    float: left;
+}
+
+a {
+    color:
+        #193356;
+}
+
+.icon.info {
+    background: url(http://cdn1.iconfinder.com/data/icons/fatcow/16X16_0160/bullet_green.png) no-repeat 0;
+}
+
+.icon.past {
+    background: url(http://cdn1.iconfinder.com/data/icons/fatcow/16X16_0160/bullet_red.png) no-repeat 0;
+}
+
+
+p {
+    margin: 0 0 9px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+
+
+
+.navbar-inner {
+    min-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #7BC0DF;
+    /* background-image: -moz-linear-gradient(top, #008dab, #0973CD);
+    background-image: -ms-linear-gradient(top, #008dab, #0973CD);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#008dab), to(#0973CD));
+    background-image: -webkit-linear-gradient(top, #008dab, #0973CD);
+    background-image: -o-linear-gradient(top, #008dab, #0973CD);
+    background-image: linear-gradient(top, #008dab, #0973CD); */
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#008dab', endColorstr='#0973CD', GradientType=0);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.navbar .brand {
+    float: left;
+    display: block;
+    padding: 0px 0px 0px;
+    margin-left: -20px;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 1;
+    color: #FFFFFF;
+}
+
+.navbar .navbar-link {
+    color: #ffffff;
+}
+.navbar .navbar-link:hover {
+    color: #ffffff;
+}
+
+.navbar {
+    color: #ffffff;
+}
+
+.navbar .nav > li > a {
+    float: none;
+    padding: 9px 10px 11px;
+    line-height: 19px;
+    color: #ffffff;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover {
+    color: #555555;
+    background-color: #FFFFFF;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+
+
+.well {
+    background-color: #93C7E8;
+}
+
+.well-mini {
+    padding: 5px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #93C7E8;
+    margin-bottom: 5px;
+    height: 30px;
+}
+
+html,
+body{padding: 0; margin: 0; height: 100%;}
+.wrapper_outer{float:left; width: 100%; position: relative; min-height: 100%; height: auto !important; height: 100%;}
+.wrapper{/* margin: 0 auto */; width: 1170px;}
+.page_content{ margin-top: -10px !important; padding-bottom: 100px !important;}
+
+.logo{float: left; padding: 5px;}
+.logout{float: right; padding: 10px 20px; color: #FFD700;}
+.logout:hover{color: #FFD700;}
+.header .brand{float: left; line-height: 36px; margin-left: 0; margin-right: 15px; font-size: 19px; color: #5F5A5A;}
+.header .brand:hover{color: #fff;}
+
+.wrapper_outer .footer{/*position: absolute; left: 0; bottom: 0; */width: 100%;}
+
+.login_box{margin: 0 auto; width: 320px;}
+.login_box .form-signin{ background: #fff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: #ccc 0px 2px 3px;
+	-moz-box-shadow: #ccc 0px 2px 3px;
+	box-shadow: #ccc 0px 2px 3px;
+	border: 1px solid #ccc; width: 300px; max-width: 300px; padding: 10px;}
+.login_box h2{margin:0; padding-bottom: 10px;}
+.login_box label{font-size: 13px; color: #000; line-height: 24px;}
+.login_box .form-control{border: 1px solid #ccc; background: #fff; padding: 5px; width: 280px; height: 30px; line-height: 30px; color: #777; font-size: 14px; margin-bottom: 10px;}
+.login_box .form-signin .btn-block{width: 100px;}
+
+.footer {
+    /* margin-top: 45px; */
+    padding: 5px 0;
+    background: #252525;
+    margin-top: 45px;
+    position:absolute;
+    bottom:0;
+    /* padding: 35px 0 36px; */
+    border-top: 1px solid #E5E5E5;
+}
+.footer .copyright{display:block; text-align: center; padding: 10px; color: #fff;}
+.footer_bottom a {
+    margin-right: 5px;
+    color: #000000;
+    text-decoration: none;
+}
+
+.btn-group.open .btn-success.dropdown-toggle {
+    background-color: #0973CD;
+}
+
+.btn-success {
+    background-color: #0973CD;
+    background-image: -moz-linear-gradient(top, #008dab, #0973CD);
+    background-image: -ms-linear-gradient(top, #008dab, #0973CD);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#008dab), to(#0973CD));
+    background-image: -webkit-linear-gradient(top, #008dab, #0973CD);
+    background-image: -o-linear-gradient(top, #008dab, #0973CD);
+    background-image: linear-gradient(top, #008dab, #0973CD);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#008dab', endColorstr='#0973CD', GradientType=0);
+    border-color: #51a351 #51a351 #387038;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    *background-color: #51a351;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+    background-color: #0973CD;
+    *background-color: #0973CD;
+}
+.btn-success:active,
+.btn-success.active {
+    background-color: #93C7E8;
+}
+
+
+.modal {
+    width: 100%;
+    /* left: 30%; */
+}
+
+.modal-body {
+    max-height: 640px;
+}
+
+.alert-success {
+    background-color: #83afe3;
+    border-color: #93C7E8;
+    color: #0a6fab;
+}
+
+.thumbimg {
+    width: 160px;
+    height: 120px;
+}
+
+.thumbnail .caption {
+    padding: 5px;
+}
+
+hr {
+    margin: 1px;
+    margin-bottom: 5px;
+}
+
+/*
+* Copyright 2010-2011 WebRupee (http://webrupee.com)
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+@font-face{font-family: 'WebRupee';src: url('http://cdn.webrupee.com/WebRupee.V2.0.eot');src: local('WebRupee'), url('http://cdn.webrupee.com/WebRupee.V2.0.ttf') format('truetype'),  url('http://cdn.webrupee.com/WebRupee.V2.0.woff') format('woff'), url('http://cdn.webrupee.com/WebRupee.V2.0.svg') format('svg');font-weight: normal;font-style: normal;}
+.WebRupee{font-family: 'WebRupee';}
+
+.page-active{
+	color: white !important;	
+}
+
+#contentIdsTable td{
+	word-break: break-all;
+}
+
+
+#innerVisible{ 
+/* display: none; */
+
+float: left;
+position: absolute; 
+/* margin-left: 32px; */
+z-index: 10;
+background-color: white;
+width: 25%;
+border: 3px solid #dddddd; 
+margin: auto;
+}
+
+#outerVisible{
+/* width: 69%; */
+float: left;
+margin-left: 10px; 
+float: left;	
+}
+
+.circle_list a.active {
+    background-color: #0016E5;
+}
+.circle_list span {
+    background-color: #bcc0c9;
+    color: #FFFFFF;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    padding: 2px 0;
+    text-decoration: none;
+    margin: 0 2px 2px 0;
+    width: 40px;
+    text-align: center;
+}
+.circle_list span.active {
+    background-color: #575f6a;
+}
+
+.topNavDropDown:hover ul {display: block;}

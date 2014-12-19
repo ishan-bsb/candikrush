@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{E MMM dd HH:mm:ss yyyy} %c %-4p %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="appFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/tmp/candiKrush.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mmz}|%m%n"/>
+        </layout>
+       <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+        <param name="ActiveFileName" value="/var/log/portal/cms-tool-fe.log" />  
+        <param name="FileNamePattern" value="/var/log/portal/portal-fe.%d{yyyy-MM-dd}.log.gz" />
+      </rollingPolicy>
+    </appender>
+
+    <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+        <param name="BufferSize" value="500"/>
+        <appender-ref ref="appFileAppender"/>
+    </appender>
+
+    <logger name="app" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="ASYNC"/>
+    </logger>
+    
+    <appender name="analyticsFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/data/log/httpd/ops_bc_log"/>
+        <!--  Rollover at the top of every hour. -->
+        <param name="DatePattern" value="'-'yyyyMMdd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss} %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ASYNC_2" class="org.apache.log4j.AsyncAppender">
+        <param name="BufferSize" value="10000"/>
+        <appender-ref ref="analyticsFileAppender"/>
+    </appender>
+    
+    <logger name="analyticsLogger" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="ASYNC_2"/>
+    </logger>
+
+    <root>
+        <level value="info"/>
+        <appender-ref ref="appFileAppender"/>
+    </root>
+    
+    <appender name="audit-file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/tmp/my-application-audit.log"/>
+		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+	    	<param name="ActiveFileName" value="/tmp/my-application-audit.log" />  
+	     	<param name="FileNamePattern" value="/tmp/my-application-audit.%d{yyyy-MM-dd}.log.gz" />
+	     </rollingPolicy>
+       	<layout class="org.apache.log4j.PatternLayout">
+        	<param name="ConversionPattern" value="[%thread] %m %n"/>
+       	</layout>
+	</appender>
+	
+	<logger name="fr.xebia.audit" additivity="false">
+		<level value="TRACE"/>
+		<appender-ref ref="audit-file" />
+	</logger>
+    
+</log4j:configuration>
+
