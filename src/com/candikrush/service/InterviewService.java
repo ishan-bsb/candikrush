@@ -13,8 +13,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.candikrush.dto.Interview;
+import com.candikrush.dto.Schedule;
 import com.candikrush.dto.Outcome;
+import com.candikrush.dto.ScheduleType;
 
 @Service
 public class InterviewService {
@@ -24,7 +25,7 @@ public class InterviewService {
 
     private Logger        logger = LoggerFactory.getLogger(InterviewService.class.getCanonicalName());
 
-    public List<Interview> getInterviewsForCandidateForDay(String candId) {
+    public List<Schedule> getInterviewsForCandidateForDay(String candId) {
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -35,36 +36,41 @@ public class InterviewService {
         long start = cal.getTimeInMillis();
         cal.add(Calendar.DATE, 1);
         long end = cal.getTimeInMillis();
-        return mongoCMSDB.find(Query.query(Criteria.where("startTimestamp").gte(start).and("candId").is(candId).andOperator(Criteria.where("startTimestamp").lt(end))), Interview.class);
+        return mongoCMSDB.find(
+                Query.query(Criteria.where("startTimestamp").gte(start).and("candId").is(candId).and("scheduleType").is(ScheduleType.INTERVIEW).andOperator(Criteria.where("startTimestamp").lt(end))),
+                Schedule.class);
     }
 
-    public void scheduleInterview(String candId, String reviewerId, long start, long end) {
+    public void scheduleEvent(String candId, String reviewerId, long start, long end, String schedulerId, ScheduleType scheduleType) {
         if(StringUtils.isEmpty(candId) || StringUtils.isEmpty(reviewerId) || (end <= start)) {
             logger.error("Incorrect params for scheduleInterview");
             return;
         }
-        Interview interview = new Interview();
+        Schedule interview = new Schedule();
         interview.setCandId(candId);
         interview.setReviewerId(reviewerId);
         interview.setStartTimestamp(start);
         interview.setEndTimestamp(end);
+        interview.setSchedulederId(schedulerId);
+        interview.setScheduleType(scheduleType);
+        interview.setScheduleTimestamp(System.currentTimeMillis());
         mongoCMSDB.save(interview);
     }
-    
+
     public boolean updateOutcome(String remarks, Outcome outcome, String interviewId) {
         if(StringUtils.isEmpty(remarks) || null == outcome || StringUtils.isEmpty(interviewId)) {
             logger.error("Mandatory params missing");
             return false;
         }
-        Interview interview = mongoCMSDB.findById(interviewId, Interview.class);
+        Schedule interview = mongoCMSDB.findById(interviewId, Schedule.class);
         interview.setRemarks(remarks);
         interview.setOutcome(outcome);
         mongoCMSDB.save(interview);
         return true;
     }
-    
-    public List<Interview> getAllInterviewsForCandidate(String candId) {
-        return mongoCMSDB.find(Query.query(Criteria.where("candId").is(candId)), Interview.class);
+
+    public List<Schedule> getAllInterviewsForCandidate(String candId) {
+        return mongoCMSDB.find(Query.query(Criteria.where("candId").is(candId).and("scheduleType").is(ScheduleType.INTERVIEW)), Schedule.class);
     }
 
 }

@@ -1,20 +1,26 @@
 package com.candikrush.dto;
 
-public class Interview {
+public class Schedule {
 
-    private String  id;
+    private String       id;
 
-    private String  candId;
+    private String       candId;
 
-    private String  reviewerId;
+    private String       reviewerId;
 
-    private long    startTimestamp;
+    private String       schedulederId;
 
-    private long    endTimestamp;
+    private long         scheduleTimestamp;
 
-    private String  remarks;
+    private long         startTimestamp;
 
-    private Outcome outcome;
+    private long         endTimestamp;
+
+    private String       remarks;
+
+    private Outcome      outcome;
+
+    private ScheduleType scheduleType;
 
     public String getId() {
         return id;
@@ -70,6 +76,30 @@ public class Interview {
 
     public void setEndTimestamp(long endTimestamp) {
         this.endTimestamp = endTimestamp;
+    }
+
+    public String getSchedulederId() {
+        return schedulederId;
+    }
+
+    public void setSchedulederId(String schedulederId) {
+        this.schedulederId = schedulederId;
+    }
+
+    public long getScheduleTimestamp() {
+        return scheduleTimestamp;
+    }
+
+    public void setScheduleTimestamp(long scheduleTimestamp) {
+        this.scheduleTimestamp = scheduleTimestamp;
+    }
+
+    public ScheduleType getScheduleType() {
+        return scheduleType;
+    }
+
+    public void setScheduleType(ScheduleType scheduleType) {
+        this.scheduleType = scheduleType;
     }
 
 }

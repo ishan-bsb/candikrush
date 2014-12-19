@@ -6,12 +6,19 @@ import com.candikrush.common.UserType;
 
 public class CKUser {
 
-    private String id;
-    private String username;
-    private String password;
-    private long   lastUpdated;
-    List<String>   roles;
-    private UserType   userType;
+    private String   id;
+
+    private String   username;
+
+    private String   password;
+
+    private long     lastUpdated;
+
+    List<String>     roles;
+
+    private UserType userType;
+
+    private String   email;
 
     public String getId() {
         return id;
@@ -49,17 +56,25 @@ public class CKUser {
         this.roles = roles;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "CmsUser [id=" + id + ", username=" + username + ", password=" + password + ", lastUpdated=" + lastUpdated + ", roles=" + roles + "]";
     }
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
 
 }

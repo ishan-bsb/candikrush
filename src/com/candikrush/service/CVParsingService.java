@@ -24,6 +24,8 @@ import org.w3c.dom.Element;
 import com.candikrush.dto.Candidate;
 import com.candikrush.dto.CvState;
 import com.candikrush.dto.CvStateDescription;
+import com.candikrush.dto.Schedule;
+import com.candikrush.dto.ScheduleType;
 import com.candikrush.dto.UploadedResumeDetails;
 import com.candikrush.utils.Utils;
 import com.candikrush.utils.XMLUtils;
@@ -43,6 +45,8 @@ public class CVParsingService {
     @Scheduled(fixedDelay = 10000)
     private void processResumes() {
         //createTestResume();
+        createTestSchedule();
+        System.exit(0);
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
@@ -51,6 +55,18 @@ public class CVParsingService {
             resume.setProcessed(true);
             mongoCMSDB.save(resume);
         }
+    }
+
+    private void createTestSchedule() {
+        Schedule sch = new Schedule();
+        sch.setCandId("ram@ymail.com");
+        sch.setEndTimestamp(78787878L);
+        sch.setReviewerId("shyam@ymail.com");
+        sch.setStartTimestamp(78978);
+        sch.setSchedulederId("karan@ymail.com");
+        sch.setScheduleTimestamp(899);
+        sch.setScheduleType(ScheduleType.INTERVIEW);
+        mongoCMSDB.save(sch);
     }
 
     private String getFileName(String filePath) {
