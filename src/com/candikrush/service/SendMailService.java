@@ -1,5 +1,8 @@
 package com.candikrush.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class SendMailService {
 	
 	protected static Logger logger = LoggerFactory.getLogger(SendMailService.class);
 	
-	public void sendNotificationEmail(String from, String to, String candidateId, long timeStamp) throws Exception{
+	public void sendNotificationEmail(String from, String to, String candidateId, long timeStampinMillis, long durationinMillis) throws Exception{
 		Candidate candidate = candidateApiService.getCandidateFromId(candidateId);
 		if(null == candidate){
 			logger.error("Candidate not found for id:"+candidateId);
@@ -31,9 +34,10 @@ public class SendMailService {
 		String formAction = generateFormResponseUrl();
 		
 		String mailerContent =  getMailer(candidate.getSummary(), formAction, candidateId);
-		String[] attachment = {};
+		List<String> attachment = new ArrayList<String>();
+		attachment.add(candidate.getCvPath());
 		
-		SendEmailWithAttachments.sendMultiPartMail(from, to, CC_MAIL_ID, mailSubject, mailerContent,attachment);
+		SendEmailWithAttachments.sendICSMail(from, to, mailSubject, mailerContent, timeStampinMillis, durationinMillis, attachment);
 	}
 	
 	private String getMailer(String summary, String form_action, String candidateId){
