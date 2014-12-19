@@ -35,7 +35,7 @@ public class LoginController {
 		 String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	     CKUser user = loginService.getUserFromUserName(username);
 		 if(user.getUserType() == UserType.CONSULTANT){
-			 return new ModelAndView("consultant/bulkUpload");
+			 return new ModelAndView("consultant/uploadResume");
 		 }
 		 else if(user.getUserType() == UserType.HR){
 			 return new ModelAndView("consultant/home");
