@@ -1,5 +1,7 @@
 package com.candikrush.dto;
 
+import org.springframework.util.StringUtils;
+
 public enum CvState {
 
     UPLOAD("Resume uploaded successfully"), REFRESHED(""), HR_REJECT("Resume Rejected @Hr screening"), TECH_SCREEN_SCH("Please screen the candidate"),  TECH_SCREEN_REJECT("Resume Rejected @Tech screening"), TECH_SCREEN_CLEAR("Resume Passed HR screening"), INT_SCH("Interview scheduled"), INT_REJECT("Interview Reject"), OFFER("Offer Proccessed"), HOLD("Offer on hold");
@@ -13,8 +15,15 @@ public enum CvState {
 	public String getMail_subject() {
 		return mail_subject;
 	}
+	
+	public static CvState getCVStateFromString(String state){
+	    if(!StringUtils.hasText(state)){
+	        return null;
+	    }
+	    return CvState.valueOf(state);
+	}
     
-	public CvState getNextState(CvState currentState, boolean proceedToNextRound, CvState nextState){
+	public static CvState getNextState(CvState currentState, boolean proceedToNextRound, CvState nextState){
 		if(nextState != null){
 			return nextState;
 		}

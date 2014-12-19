@@ -1,6 +1,9 @@
 package com.candikrush.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.util.CollectionUtils;
 
 public class Candidate {
 
@@ -142,6 +145,13 @@ public class Candidate {
 
     public void setNp(int np) {
         this.np = np;
+    }
+
+    public void addHistoryElem(CvStateDescription historyElem) {
+        if(CollectionUtils.isEmpty(history)){
+            this.history = new ArrayList<>();
+        }
+        this.history.add(historyElem);
     }
 
 }
