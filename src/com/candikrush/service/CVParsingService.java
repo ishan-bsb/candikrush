@@ -46,7 +46,6 @@ public class CVParsingService {
     private void processResumes() {
         //createTestResume();
         createTestSchedule();
-        System.exit(0);
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
