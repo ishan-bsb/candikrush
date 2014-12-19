@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
@@ -23,6 +24,7 @@ import org.w3c.dom.Element;
 import com.candikrush.dto.Candidate;
 import com.candikrush.dto.CvState;
 import com.candikrush.dto.CvStateDescription;
+import com.candikrush.dto.UploadedResumeDetails;
 import com.candikrush.utils.Utils;
 import com.candikrush.utils.XMLUtils;
 
@@ -37,6 +39,21 @@ public class CVParsingService {
     private MongoTemplate mongoCMSDB;
 
     RestTemplate          restApi = new RestTemplate();
+
+    @Scheduled(fixedDelay = 60000)
+    private void processResumes() {
+        List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
+        for(UploadedResumeDetails resume : resumes) {
+            String fileName = getFileName(resume.getFilePath());
+            String parsed = getParsedResume(resume.getFilePath(), fileName);
+            processCV(parsed, resume.getFilePath(), resume.getEmail(), resume.getCreationDate(), resume.getCctc(), resume.getEctc(), resume.getNoticePeriod());
+        }
+    }
+
+    private String getFileName(String filePath) {
+        int index = filePath.lastIndexOf('/');
+        return filePath.substring(index + 1);
+    }
 
     public String getParsedResume(String filePath, String fileName) {
         logger.info("Getting parsed cv for :" + filePath + " : " + fileName);

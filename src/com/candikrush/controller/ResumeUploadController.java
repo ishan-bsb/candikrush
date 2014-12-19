@@ -50,8 +50,8 @@ public class ResumeUploadController {
                 stream.write(bytes);
                 stream.close();
                 UploadedResumeDetails urd = new UploadedResumeDetails();
-                urd.setCctc(Long.parseLong(cctc));
-                urd.setEctc(Long.parseLong(ectc));
+                urd.setCctc(Integer.parseInt(cctc));
+                urd.setEctc(Integer.parseInt(ectc));
                 urd.setEmail(email);
                 int np = 0;
                 try {
