@@ -1,6 +1,7 @@
 package com.candikrush.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,8 +39,12 @@ public class SendMailService {
 		String mailerContent =  getMailer(candidate.getSummary(), formAction, candidateId);
 		List<String> attachment = new ArrayList<String>();
 		attachment.add(candidate.getCvPath());
-		
-		SendEmailWithAttachments.sendICSMail(from, to, mailSubject, mailerContent, timeStampinMillis, durationinMillis, attachment);
+		if(timeStampinMillis > System.currentTimeMillis()){
+			SendEmailWithAttachments.sendICSMail(from, to, mailSubject, mailerContent, timeStampinMillis, durationinMillis, attachment);
+		}
+		else{
+			SendEmailWithAttachments.sendMultiPartMail(from, to, "", mailSubject, mailerContent,  (String[]) attachment.toArray());
+		}
 	}
 	
 	private String getMailer(String summary, String form_action, String candidateId){
