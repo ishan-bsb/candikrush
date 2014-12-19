@@ -1,5 +1,6 @@
 package com.candikrush.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.candikrush.dto.Candidate;
+import com.candikrush.dto.CvStateDescription;
 import com.candikrush.dto.Schedule;
 import com.candikrush.dto.Outcome;
 import com.candikrush.dto.ScheduleType;
@@ -66,6 +69,17 @@ public class InterviewService {
         interview.setRemarks(remarks);
         interview.setOutcome(outcome);
         mongoCMSDB.save(interview);
+        Candidate cand = mongoCMSDB.findById(interview.getCandId(), Candidate.class);
+        CvStateDescription desc = new CvStateDescription();
+        List<CvStateDescription> list = cand.getHistory();
+        if(list == null) {
+            list = new ArrayList<>();
+            cand.setHistory(list);
+        }
+        desc.setRemarks(interview.getScheduleType() + " : by " + interview.getReviewerId() + " - " +remarks);
+        desc.setTimestamp(System.currentTimeMillis());
+        list.add(desc);
+        mongoCMSDB.save(cand);
         return true;
     }
 
