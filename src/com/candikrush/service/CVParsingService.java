@@ -12,7 +12,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -29,14 +29,14 @@ import com.candikrush.utils.XMLUtils;
 @Service
 public class CVParsingService {
 
-    private Logger          logger  = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
+    private Logger        logger  = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
 
-    private final String    url     = "http://localhost:3131/v1/cv/parse?fileName=%s&filPath=%s";
+    private final String  url     = "http://localhost:3131/v1/cv/parse?fileName=%s&filePath=%s";
 
     @Autowired
-    private MongoOperations candiMongoTemplate;
+    private MongoTemplate mongoCMSDB;
 
-    RestTemplate            restApi = new RestTemplate();
+    RestTemplate          restApi = new RestTemplate();
 
     public String getParsedResume(String filePath, String fileName) {
         logger.info("Getting parsed cv for :" + filePath + " : " + fileName);
@@ -45,7 +45,7 @@ public class CVParsingService {
             xml = restApi.getForObject(String.format(url, URLEncoder.encode(fileName, "UTF-8"), URLEncoder.encode(filePath, "UTF-8")), String.class);
         }
         catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
         logger.info("Response : " + xml);
         return xml;
@@ -86,7 +86,7 @@ public class CVParsingService {
         String name = XMLUtils.getValue(rootElement, "FullName");
         if(!checkForDuplicateEmailPhone(email, msisdn)) {
             Candidate cand = createNewCandidate(path, sourceId, postTimestamp, rootElement, email, msisdn, name, cctc, ectc, np);
-            candiMongoTemplate.save(cand);
+            mongoCMSDB.save(cand);
             sendNotificationEmailToHr(cand);
             sendNotificationToSource(cand);
         }
@@ -99,7 +99,7 @@ public class CVParsingService {
     }
 
     private Candidate updateExisting(String sourceId, int cctc, int ectc, int np, String email, String msisdn) {
-        Candidate cand = candiMongoTemplate.findOne(Query.query(Criteria.where("email").is(email).orOperator(Criteria.where("phone").is(msisdn))), Candidate.class);
+        Candidate cand = mongoCMSDB.findOne(Query.query(Criteria.where("email").is(email).orOperator(Criteria.where("phone").is(msisdn))), Candidate.class);
         cand.setCurrentState(CvState.REFRESHED);
         long time = System.currentTimeMillis();
         cand.setLastupdateTimestamp(time);
@@ -112,7 +112,7 @@ public class CVParsingService {
         desc.setTimestamp(time);
         desc.setRemarks("CV refereshed, thanks to " + sourceId);
         list.add(desc);
-        candiMongoTemplate.save(cand);
+        mongoCMSDB.save(cand);
         return cand;
     }
 
@@ -186,7 +186,7 @@ public class CVParsingService {
         Candidate candi = new Candidate();
         candi.setEmail(email);
         candi.setPhone(msisdn);
-        Candidate cand = candiMongoTemplate.findOne(Query.query(Criteria.where("email").is(email).orOperator(Criteria.where("phone").is(msisdn))), Candidate.class);
+        Candidate cand = mongoCMSDB.findOne(Query.query(Criteria.where("email").is(email).orOperator(Criteria.where("phone").is(msisdn))), Candidate.class);
         if(null == cand) {
             return false;
         }
