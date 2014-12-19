@@ -11,6 +11,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.candikrush.dto.CKUser;
 import com.candikrush.dto.CKUserPermissions;
+import com.candikrush.dto.Candidate;
 import com.candikrush.property.PropertyReader;
 import com.candikrush.utils.HttpClient;
 
@@ -108,5 +112,4 @@ public class UserApiService {
         RestTemplate restApi = new RestTemplate();
         return loginService.authenticateUser(username,password);
     }
-
 }
