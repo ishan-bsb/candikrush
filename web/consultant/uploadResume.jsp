@@ -16,9 +16,6 @@
       	Expected CTC: </td><td><input type="text" name="ectc">
       </td></tr>
       <tr><td>
-      Email: </td><td><input type="text" name="email">
-      </td></tr>
-      <tr><td>
       	Notice Period: </td><td><input type="text" name="noticePeriod">
       </td></tr>
       <tr><td colspan="3" style="text-align:right">
