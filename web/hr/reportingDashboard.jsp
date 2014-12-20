@@ -11,11 +11,13 @@
 				<th>Success Cases</th>
 			</tr>
 		<c:forEach var="rep1" items="${rep}">
+			<c:if test="${rep1 !=null}>
 			<tr>
 				<td><c:out escapeXml="false" value="${rep1.userId}"></c:out></td>
 				<td><c:out escapeXml="false" value="${rep1.total}"></c:out></td>
-				<td><c:out escapeXml="false" value="${rep1.success}"></c:out></td>
+				<td><c:out escapeXml="false" value="${rep1.success	}"></c:out></td>
 			</tr>
+			</c:if>
 		</c:forEach>
 		</tbody>
 		</table>
