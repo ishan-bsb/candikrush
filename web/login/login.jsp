@@ -48,7 +48,7 @@ method="post">
 </div>
 <div style="clear:both;" class="footer ${footerClass }" id="footerBar">
 <div class="foot">
-<span class="copyright" style="margin: 0 auto">Copyright@BSB2013</span>
+<span class="copyright" style="margin: 0 auto">candikrush</span>
 </div>
 </div>
 <script>

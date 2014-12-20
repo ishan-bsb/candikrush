@@ -32,6 +32,13 @@
     	}
     </script>
 	 -->
-</head>
+	 </head>
+	 
+
 <body>
+<div class="navbar navbar-inverse navbar-fixed-top header">
+  <div class="navbar-inner">
+	 <a class="user-name" style="float: right;margin-top: 10px;text-decoration: none;">Hi ${pageContext.request.getUserPrincipal().getName()}</a>
+	 <a href="<c:url value="j_spring_security_logout" />" class="logout">Logout</a>
+	 </div></div>
 <div class="wrapper_outer">

@@ -1,18 +1,12 @@
-<html>
-	<head>
-		<title>Home Dashboard</title>
-	</head>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="../common/header.jsp"%>
 
-	<script type="text/javascript">
-	 		
-	</script>
-	
-	<body>
-		<table>
+	<h2 style="font-size:30px">HR Console</h2>
+		<table  class="table table-bordered">
+			<tbody>
 			<tr>
-				<td><a href="/candikrush/getFreshCandidateDashboard">Click here to see fresh candidates</a></td>
-				<td><a href="/candikrush/getScreenedCandidateDashboard">Click here to see screened candidates</a></td>
-			</tr>
+				<td><a href="/candikrush/getFreshCandidateDashboard"><button class="btn btn-primary" style="padding: 10px 20px 10px 20px;">Click here to see fresh candidates</button></a></td>
+			</tr><tr>	<td><a href="/candikrush/getScreenedCandidateDashboard"><button class="btn btn-primary" style="padding: 10px 20px 10px 20px;m">Click here to see screened candidates</button></a></td>
+			</tr></tbody>
 		</table>
-	</body>
-</html>
+<%@ include file="../common/footer.jsp"%>
