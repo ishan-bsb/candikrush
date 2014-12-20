@@ -60,14 +60,20 @@ public class LoginController {
 		     logger.debug("logged in by an HR: "+user.getUsername());
 		     ModelAndView mv = getFreshCandidate();
 		     mv.setViewName("hr/homeDashboard");
+		     //mv.setViewName("hr/schedule");
 		     return mv;
 		 }
 		 return new ModelAndView("login/home");
 	}
 
-    /**
-     * @return
-     */
+	@RequestMapping("/getFreshCandidateDashboard")
+	public ModelAndView getFreshCandidateDashboard() {
+	    ModelAndView mv = getFreshCandidate();
+	    mv.addObject("pageId", "freshcandidatedashboard");
+	    mv.setViewName("hr/freshCandidateDashboard");
+	    return mv;
+	}
+	
     private ModelAndView getFreshCandidate() {
         ModelAndView mv = new ModelAndView();
          List<CvState> states = new ArrayList<>();
@@ -81,39 +87,73 @@ public class LoginController {
              mv.addObject("summary", latestCandidate.getSummary());
              mv.addObject("resumeLink", latestCandidate.getCvPath());
          }
-         //mv.addObject("summary", "This is summary");
-         //mv.addObject("resumeLink", "This is link");
          return mv;
     }
 	
-    @RequestMapping(value="/assignCandidate", method = RequestMethod.POST)
+    /*@RequestMapping(value="/assignCandidate", method = RequestMethod.POST)
 	public ModelAndView assignCandidate(@RequestParam("interviewerId") String interviewerId, 
             @RequestParam("candidateId1") String candidateId) {
 	    candidateApiService.assignForInterview(candidateId, interviewerId);
 	    ModelAndView mv = getFreshCandidate();
-        mv.setViewName("hr/homeDashboard");
+        mv.setViewName("hr/freshCandidateDashboard");
         return mv;
 	}
 	@RequestMapping(value="/rejectCandidate", method = RequestMethod.POST)
 	public ModelAndView rejectCandidate(@RequestParam("candidateId2") String candidateId) {
         candidateApiService.rejectInterview(candidateId);
         ModelAndView mv = getFreshCandidate();
-        mv.setViewName("hr/homeDashboard");
+        mv.setViewName("hr/freshCandidateDashboard");
         return mv;
-    }
+    }*/
 	
 	@RequestMapping(value="/changeState", method = RequestMethod.POST)
     public ModelAndView changeState(@RequestParam("candidateId") String candidateId, 
-                @RequestParam(required=false,value="assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
-                @RequestParam(required=false,value="remarks") String remarks, @RequestParam(required=false,value="result") String result) {
-        candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result);
+                @RequestParam("assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
+                @RequestParam("remarks") String remarks, @RequestParam("result") String result, 
+                @RequestParam("pageId") String pageId, @RequestParam(required=false, value="schTime") String schTime) {
         
-        String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!StringUtils.hasText(username)){
-        	return new ModelAndView("common/thanks");
+	    candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result, schTime);
+        
+        ModelAndView mv = new ModelAndView();
+        if("freshcandidatedashboard".equalsIgnoreCase(pageId)){
+            mv = getFreshCandidate();
+            mv.addObject("pageId", "freshcandidatedashboard");
+            mv.setViewName("hr/freshCandidateDashboard");
+        }else if("screenedcandidatedashboard".equalsIgnoreCase(pageId)){
+            mv = getScreenedCandidate();
+            mv.addObject("pageId", "screenedcandidatedashboard");
+            mv.setViewName("hr/screenedCandidateDashboard");
+        }else{
+            /*String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(!StringUtils.hasText(username)){
+                return new ModelAndView("common/thanks");
+            }*/
+            return new ModelAndView("common/thanks");
         }
-        ModelAndView mv = getFreshCandidate();
-        mv.setViewName("hr/homeDashboard");
         return mv;
     } 
+	
+	@RequestMapping("/getScreenedCandidateDashboard")
+    public ModelAndView getScreenedCandidateDashboard() {
+        ModelAndView mv = getScreenedCandidate();
+        mv.addObject("pageId", "screenedcandidatedashboard");
+        mv.setViewName("hr/screenedCandidateDashboard");
+        return mv;
+    }
+	
+	private ModelAndView getScreenedCandidate() {
+        ModelAndView mv = new ModelAndView();
+         List<CvState> states = new ArrayList<>();
+         states.add(CvState.TECH_SCREEN_CLEAR);
+         states.add(CvState.INT_SCH);
+         Candidate latestCandidate = candidateApiService.getLatestCandidateData(states);
+         if(latestCandidate != null){
+             mv.addObject("candidateId", latestCandidate.getId());
+             mv.addObject("candidateName", latestCandidate.getName());
+             mv.addObject("location", latestCandidate.getLocation());
+             mv.addObject("summary", latestCandidate.getSummary());
+             mv.addObject("resumeLink", latestCandidate.getCvPath());
+         }
+         return mv;
+    }
 }

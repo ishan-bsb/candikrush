@@ -1,5 +1,7 @@
 package com.candikrush.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -62,7 +64,7 @@ public class CandidateApiService {
         }
     }
 
-    public void changeState(String candidateId, String assigneeId, String nextState, String remarks, String result) {
+    public void changeState(String candidateId, String assigneeId, String nextState, String remarks, String result, String schTime) {
         try {
             Candidate candidate = getCandidateFromId(candidateId);
             if(candidate == null) {
@@ -74,7 +76,13 @@ public class CandidateApiService {
             }
             CvState finalNextState = CvState.getNextState(candidate.getCurrentState(), proceedToNextRound, CvState.getCVStateFromString(nextState));
             updateCandidateStateInDb(candidate, assigneeId, finalNextState, remarks);
-            sendMailService.sendNotificationEmail(HR_MAIL_ID, assigneeId, candidateId, System.currentTimeMillis(), 3600000);
+            if(proceedToNextRound){
+                //TODO: make an entry in schedule collection
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Date schDateTime = sdf.parse(schTime);
+                //TODO: what about duration of interview
+                sendMailService.sendNotificationEmail(HR_MAIL_ID, assigneeId, candidateId, schDateTime.getTime(), 3600000);
+            }
         }
         catch (Exception e) {
             logger.error("Error while changing state for " + candidateId + " Error " + e.getMessage(), e);
@@ -83,10 +91,11 @@ public class CandidateApiService {
 
     public void updateCandidateStateInDb(Candidate candidate, String assignee, CvState nextState, String remarks){
         //To update in candidate collection and in interview collection
-        reportingService.updateTotal(assignee);
+      //TODO: uncomment following before committing...test it once with reporting collection
+        /*reportingService.updateTotal(assignee);
         if(!(CvState.HR_REJECT.equals(nextState) || CvState.TECH_SCREEN_REJECT.equals(nextState) || CvState.INT_REJECT.equals(nextState))) {
             reportingService.updateSuccess(assignee);
-        }
+        }*/
         candidate.setCurrentState(nextState);
         CvStateDescription historyElem = new CvStateDescription();
         historyElem.setState(nextState);

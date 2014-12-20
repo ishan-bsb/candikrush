@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import com.candikrush.service.SendMailService;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 public class SendEmailWithAttachments {
 
     private static Properties properties = null;
@@ -51,7 +53,7 @@ public class SendEmailWithAttachments {
             properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             properties.put("mail.smtp.socketFactory.fallback", "false");
             properties.put("mail.login.username", "ishan@bsb.in");
-            properties.put("mail.login.password", "");
+            properties.put("mail.login.password", "bsb@12345");
         }
         catch (Exception e) {
         }
@@ -102,9 +104,9 @@ public class SendEmailWithAttachments {
     
     
     public static void sendICSMail(String from, String to,String subject, String text, long startTime, long duration, List<String> attachments ) throws Exception {
-        if(properties.isEmpty()) {
-            throw new Exception("Cannot send mail. Host data not available.");
-        }
+//        if(properties.isEmpty()) {
+//            throw new Exception("Cannot send mail. Host data not available.");
+//        }
 
         Calendar calender = CalenderInviteService.CreateICalender(startTime, duration, subject, to);
         
@@ -114,7 +116,7 @@ public class SendEmailWithAttachments {
         
         byte[] attachmentData = CalenderInviteService.calendarAsByteArray(calender);
         
-        HtmlEmail email = new HtmlEmail();
+        MultiPartEmail email = new MultiPartEmail();
 		email.setHostName("smtp.googlemail.com");
 		email.setSmtpPort(465);
 
@@ -122,11 +124,11 @@ public class SendEmailWithAttachments {
 			email.addTo(to);
 			email.setFrom(from);
 			email.setSubject(subject);
-			email.setHtmlMsg(text);
-			email.setAuthenticator(new DefaultAuthenticator("ishan@bsb.in", ""));
+			email.setMsg(text);
+			email.setAuthenticator(new DefaultAuthenticator("ishan@bsb.in", "bsb@12345"));
 			email.setSSLOnConnect(true);
 
-			String name = subject;
+			String name = "invite.ics";
 			String contentType = String.format("text/calendar; name="+name);
 			System.out.println(contentType);
 			email.attach(new ByteArrayDataSource(attachmentData, contentType),
@@ -139,15 +141,16 @@ public class SendEmailWithAttachments {
 			logger.info(sendMail);
 		}
 		catch(Exception e){
+		    e.printStackTrace();
 			logger.error("Error sending email "+e.getMessage(),e);
 		}
     }
     
     public static void main(String[] args) {
 		try {
-			String[] test = {"/Users/ishan/work/portal-bheem-fe/README.md"};
+			String[] test = {"/tmp/candiKrush.log"};
 //			sendMultiPartMail("ishan@bsb.com", "ishan@bsb.in", "ishannsd@bsb.in", "testing", "Hello",test );
-//			sendICSMail("ishan@bsb.in", "ishan@bsb.in", "Meeting invite", "Hello ", 1419018399000L, 3600000L);
+			sendICSMail("ravikant@bsb.in", "ishan@bsb.in", "Meeting invite", "Hello ", 1419018399000L, 3600000L, Arrays.asList(test));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

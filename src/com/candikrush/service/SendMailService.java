@@ -39,12 +39,15 @@ public class SendMailService {
 		String mailerContent =  getMailer(candidate.getSummary(), formAction, candidateId);
 		if(timeStampinMillis > System.currentTimeMillis()){
 			List<String> attachment = new ArrayList<String>();
-			attachment.add(candidate.getCvPath());
-			
+			//TODO: uncomment before committing
+			//attachment.add(candidate.getCvPath());
+			attachment.add("/Users/ravikant/Desktop/Candi_Krush/tmpFiles/nitin_req.txt");
 			SendEmailWithAttachments.sendICSMail(from, to, mailSubject, mailerContent, timeStampinMillis, durationinMillis, attachment);
 		}
 		else{
-			String[] arr = {candidate.getCvPath()};
+		  //TODO: uncomment before committing
+			//String[] arr = {candidate.getCvPath()};
+		    String[] arr = {"/Users/ravikant/Desktop/Candi_Krush/tmpFiles/nitin_req.txt"};
 			SendEmailWithAttachments.sendMultiPartMail(from, to, CC_MAIL_ID, mailSubject, mailerContent,  arr);
 		}
 	}
