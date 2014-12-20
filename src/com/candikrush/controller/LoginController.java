@@ -100,7 +100,8 @@ public class LoginController {
                 @RequestParam(required=false, value="remarks") String remarks, @RequestParam("result") String result, 
                 @RequestParam(required=false, value="pageId") String pageId, @RequestParam(required=false, value="schTime") String schTime) {
         
-	    candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result, schTime);
+        String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result, schTime, username);
         
         ModelAndView mv = new ModelAndView();
         if("freshcandidatedashboard".equalsIgnoreCase(pageId)){
