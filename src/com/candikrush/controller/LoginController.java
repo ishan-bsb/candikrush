@@ -108,9 +108,9 @@ public class LoginController {
 	
 	@RequestMapping(value="/changeState", method = RequestMethod.POST)
     public ModelAndView changeState(@RequestParam("candidateId") String candidateId, 
-                @RequestParam("assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
-                @RequestParam("remarks") String remarks, @RequestParam("result") String result, 
-                @RequestParam("pageId") String pageId, @RequestParam(required=false, value="schTime") String schTime) {
+                @RequestParam(required=false, value="assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
+                @RequestParam(required=false, value="remarks") String remarks, @RequestParam("result") String result, 
+                @RequestParam(required=false, value="pageId") String pageId, @RequestParam(required=false, value="schTime") String schTime) {
         
 	    candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result, schTime);
         
