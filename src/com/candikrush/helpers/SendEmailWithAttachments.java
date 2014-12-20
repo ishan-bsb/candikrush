@@ -116,7 +116,7 @@ public class SendEmailWithAttachments {
         
         byte[] attachmentData = CalenderInviteService.calendarAsByteArray(calender);
         
-        MultiPartEmail email = new MultiPartEmail();
+        HtmlEmail email = new HtmlEmail();
 		email.setHostName("smtp.googlemail.com");
 		email.setSmtpPort(465);
 
@@ -124,7 +124,7 @@ public class SendEmailWithAttachments {
 			email.addTo(to);
 			email.setFrom(from);
 			email.setSubject(subject);
-			email.setMsg(text);
+			email.setHtmlMsg(text);
 			email.setAuthenticator(new DefaultAuthenticator("ishan@bsb.in", "bsb@12345"));
 			email.setSSLOnConnect(true);
 
