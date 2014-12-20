@@ -14,11 +14,10 @@ public class ResumeUploadService {
     @Autowired
     private MongoTemplate mongoCMSDB;
     
-    private static final String RESUME_UPLOAD_COLLECTION = "resume_upload_collection";
     private static final Logger logger = LoggerFactory.getLogger(ResumeUploadService.class);
     
     public void updateResumeData(UploadedResumeDetails urd){
-        mongoCMSDB.insert(urd, RESUME_UPLOAD_COLLECTION);
+        mongoCMSDB.save(urd);
     }
     
 }

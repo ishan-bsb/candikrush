@@ -10,8 +10,9 @@
 				<th> Total Cases</th>
 				<th>Success Cases</th>
 			</tr>
+		<c:if test="${rep !=null}">
 		<c:forEach var="rep1" items="${rep}">
-			<c:if test="${rep1 !=null}>
+			<c:if test="${rep1 !=null}">
 			<tr>
 				<td><c:out escapeXml="false" value="${rep1.userId}"></c:out></td>
 				<td><c:out escapeXml="false" value="${rep1.total}"></c:out></td>
@@ -19,6 +20,7 @@
 			</tr>
 			</c:if>
 		</c:forEach>
+		</c:if>
 		</tbody>
 		</table>
 <%@ include file="../common/footer.jsp"%>

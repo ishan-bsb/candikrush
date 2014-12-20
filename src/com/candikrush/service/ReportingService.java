@@ -66,9 +66,7 @@ public class ReportingService {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        System.out.println(cal.getTimeInMillis());
         cal.add(Calendar.MONTH, -monthsOld);
-        System.out.println(cal.getTimeInMillis());
         return cal.getTimeInMillis();
     }
 

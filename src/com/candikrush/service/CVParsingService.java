@@ -49,8 +49,8 @@ public class CVParsingService {
     private final RestTemplate restApi              = new RestTemplate();
 
     private final String       hr                   = "jasdeep@bsb.in";
-    
-    private final String tomcat = "/Users/jasdeep/Desktop/tomcat/";
+
+    private final String       tomcat               = "/Users/jasdeep/Desktop/tomcat/";
 
     List<CvState>              nonRefreshableStates = Arrays.asList(CvState.INT_SCH, CvState.TECH_SCREEN_CLEAR, CvState.TECH_SCREEN_SCH, CvState.HOLD, CvState.OFFER);
 
@@ -63,10 +63,10 @@ public class CVParsingService {
             processCV(parsed, resume.getFilePath(), resume.getEmail(), resume.getCreationDate(), resume.getCctc(), resume.getEctc(), resume.getNoticePeriod());
             resume.setProcessed(true);
             mongoCMSDB.save(resume);
-            File in = new File(resume.getFilePath());
-            in.toPath();
-            File out = new File(tomcat+"webapps/resumes/"+fileName);
-            Files.copy(in.toPath(), out.toPath());
+            // File in = new File(resume.getFilePath());
+            // in.toPath();
+            // File out = new File(tomcat + "webapps/resumes/" + fileName);
+            // Files.copy(in.toPath(), out.toPath());
         }
     }
 
@@ -162,7 +162,7 @@ public class CVParsingService {
 
     private void sendDuplicateNotificationToSource(Candidate cand, String sourceId) {
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), cand.getName() + " already applied in BSB", "", "", new String[0]);
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), "jasdeep@bsb.in", cand.getName() + " already applied in BSB", "", new String[0]);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -170,9 +170,8 @@ public class CVParsingService {
     }
 
     private void sendRefreshNotificationToHR(Candidate cand) {
-        String hr = "namita@bsb.in";
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "", cand.getName() + " re - applied in BSB",
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "jasdeep@bsb.in", cand.getName() + " re - applied in BSB",
                     "Candidate location " + cand.getLocation() + "<br> Summary<br>" + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
         }
         catch (Exception e) {
@@ -182,7 +181,7 @@ public class CVParsingService {
 
     private void sendNotificationToSource(Candidate cand) {
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), cand.getName() + " application accepted in BSB", "", "", new String[0]);
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), "jasdeep@bsb.in", cand.getName() + " application accepted in BSB", "", new String[0]);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -191,7 +190,7 @@ public class CVParsingService {
 
     private void sendNotificationEmailToHr(Candidate cand) {
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "", cand.getName() + " has applied in BSB",
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "jasdeep@bsb.in", cand.getName() + " has applied in BSB",
                     "Candidate location " + cand.getLocation() + "<br> Summary<br>" + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
         }
         catch (Exception e) {

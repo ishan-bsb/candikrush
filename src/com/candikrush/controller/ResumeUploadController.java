@@ -7,6 +7,10 @@ import java.io.FileOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.candikrush.dto.CKUser;
 import com.candikrush.dto.UploadedResumeDetails;
 import com.candikrush.service.ResumeUploadService;
 
@@ -25,11 +30,14 @@ public class ResumeUploadController {
     @Autowired 
     private ResumeUploadService resumeUploadService;
     
+    @Autowired
+    private MongoTemplate mongoCMSDB;
+    
     private static final Logger logger = LoggerFactory.getLogger(ResumeUploadController.class);
     
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody String uploadFileHandler(@ModelAttribute("file") MultipartFile file, @RequestParam("ectc") String ectc, 
-                                                @RequestParam("cctc") String cctc, @RequestParam("email") String email,
+                                                @RequestParam("cctc") String cctc,
                                                 @RequestParam("noticePeriod") String noticePeriod) {
  
         if (!file.isEmpty()) {
@@ -37,8 +45,8 @@ public class ResumeUploadController {
                 byte[] bytes = file.getBytes();
                 //ectc, cctc, email, notice period
                 // Creating the directory to store file
-                String rootPath = "/Users/ravikant/Desktop/Candi_Krush/";
-                File dir = new File(rootPath + File.separator + "tmpFiles");
+                String rootPath = "/Users/jasdeep/Desktop/tomcat/webapps/resumes/";
+                File dir = new File(rootPath);
                 if (!dir.exists()){
                     dir.mkdirs();
                 }
@@ -52,7 +60,9 @@ public class ResumeUploadController {
                 UploadedResumeDetails urd = new UploadedResumeDetails();
                 urd.setCctc(Integer.parseInt(cctc));
                 urd.setEctc(Integer.parseInt(ectc));
-                urd.setEmail(email);
+                String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                CKUser user = mongoCMSDB.findOne(Query.query(Criteria.where("username").is(username)), CKUser.class);
+                urd.setEmail(user.getEmail());
                 int np = 0;
                 try {
                     np = Integer.parseInt(noticePeriod);
