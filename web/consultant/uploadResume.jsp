@@ -1,31 +1,30 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="../common/header.jsp"%>
 
-<%@ page session="false" %>
-<html>
-<head>
-<title>Upload File Request Page</title>
-</head>
-<script type="text/javascript">
- 		function checkOnSubmit(){
- 			if(val==null || val==''){
- 				alert('hello');
- 			}
- 		}	
-</script>
-<body>
- 
- 	
- 	
+<div class="container page_content">
+		<div id="main-container" class="container">
+			<h2 style="font-size:30px">Resume Upload</h2>
     <form method="POST" action="/candikrush/uploadFile" enctype="multipart/form-data">
-        File to upload: <input type="file" name="file"><br /> 
-        Current CTC: <input type="text" name="cctc"><br />
-        Expected CTC: <input type="text" name="ectc"><br />
-        Email: <input type="text" name="email"><br />
-        Notice Period: <input type="text" name="noticePeriod"><br />
-         <br /> 
-        <input type="submit" value="Upload"> Press here to upload the file!
+    <table class="table table-bordered">
+    <tr><td>
+        File to upload: </td><td><input type="file" name="file">
+     </td></tr>
+     <tr><td>    
+      Current CTC: </td><td><input type="text" name="cctc">
+     </td></tr>
+      <tr><td>
+      	Expected CTC: </td><td><input type="text" name="ectc">
+      </td></tr>
+      <tr><td>
+      Email: </td><td><input type="text" name="email">
+      </td></tr>
+      <tr><td>
+      	Notice Period: </td><td><input type="text" name="noticePeriod">
+      </td></tr>
+      <tr><td colspan="3" style="text-align:right">
+			<button class="bulkUpload btn btn-primary" id="uploadZip" name="uploadZip" style="padding: 10px 20px 10px 20px;margin-left: 1150px;">Upload</button>
+		</td>
+		</tr>
     </form>
-     
-</body>
-</html>
+
+<%@ include file="../common/footer.jsp"%>
