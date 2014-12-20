@@ -20,9 +20,6 @@
 			</c:if>
 		</div>
     	
-    	<b>Name:</b> <c:out value="${candidateName}"></c:out><br/><br/>
-    	<b>Location:</b> <c:out value="${location}"></c:out><br/><br/>
-    	
     	<div id="summaryDiv">
     	<b>Summary:</b><br/>
     		<c:out escapeXml="false" value="${summary}"></c:out>

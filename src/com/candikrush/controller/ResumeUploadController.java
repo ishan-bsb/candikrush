@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.candikrush.dto.CKUser;
 import com.candikrush.dto.UploadedResumeDetails;
@@ -36,10 +37,10 @@ public class ResumeUploadController {
     private static final Logger logger = LoggerFactory.getLogger(ResumeUploadController.class);
     
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody String uploadFileHandler(@ModelAttribute("file") MultipartFile file, @RequestParam("ectc") String ectc, 
+    public ModelAndView uploadFileHandler(@ModelAttribute("file") MultipartFile file, @RequestParam("ectc") String ectc, 
                                                 @RequestParam("cctc") String cctc,
                                                 @RequestParam("noticePeriod") String noticePeriod) {
- 
+    	ModelAndView mv = new ModelAndView();
         if (!file.isEmpty()) {
             try { 
                 byte[] bytes = file.getBytes();
@@ -74,14 +75,17 @@ public class ResumeUploadController {
                 urd.setFilePath(serverFile.getAbsolutePath());
                 urd.setCreationDate(System.currentTimeMillis());
                 resumeUploadService.updateResumeData(urd);
+                
                 logger.info("Server File Location=" + serverFile.getAbsolutePath());
-                return "Thank you! Successfully uploaded file=" + serverFile.getName();
+                 mv.addObject("info", "Thank you! Successfully uploaded file=" + serverFile.getName());
             } catch (Exception e) {
-                return "File uploading failed. Exception is: " + e.getMessage();
+            	mv.addObject("info", "File uploading failed. Exception is: " + e.getMessage());
             }
         } else {
-            return "Uploaded file is empty. Please provide a valid file.";
+        	mv.addObject("info","Uploaded file is empty. Please provide a valid file.");
         }
+        mv.setViewName("common/thanks");
+        return mv;
     }
     
     /**
