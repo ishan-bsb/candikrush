@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +48,9 @@ public class LoginController {
 	public ModelAndView gethomePage(HttpServletRequest request, Model model) {
 
 		 String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 if(!StringUtils.hasText(username)){
+			 return getloginPage(request, model);
+		 }
 	     CKUser user = loginService.getUserFromUserName(username);
 		 if(user.getUserType() == UserType.CONSULTANT){
 		     logger.debug("logged in by a consultant: "+user.getUsername());
@@ -100,10 +104,14 @@ public class LoginController {
 	
 	@RequestMapping(value="/changeState", method = RequestMethod.POST)
     public ModelAndView changeState(@RequestParam("candidateId") String candidateId, 
-                @RequestParam("assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
-                @RequestParam("remarks") String remarks, @RequestParam("result") String result) {
+                @RequestParam(required=false,value="assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
+                @RequestParam(required=false,value="remarks") String remarks, @RequestParam(required=false,value="result") String result) {
         candidateApiService.changeState(candidateId, assigneeId, nextState, remarks, result);
         
+        String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!StringUtils.hasText(username)){
+        	return new ModelAndView("common/thanks");
+        }
         ModelAndView mv = getFreshCandidate();
         mv.setViewName("hr/homeDashboard");
         return mv;

@@ -3,7 +3,7 @@
 	</c:if>
 	<div style="clear:both;" class="footer ${footerClass }" id="footerBar">
 		<div class="foot">
-			<span class="copyright" style="margin: 0 auto">Copyright@BSB2014</span>
+			<span class="copyright" style="margin: 0 auto">CandiKrush</span>
 		</div>
 	</div>
 	</div>

@@ -28,6 +28,7 @@ import net.fortuna.ical4j.model.Calendar;
 import org.apache.commons.mail.ByteArrayDataSource;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class SendEmailWithAttachments {
 
         Multipart multipart = new MimeMultipart();
         BodyPart part1 = new MimeBodyPart();
-        part1.setText(text);
+        part1.setContent(text,"text/html; charset=utf-8");
         multipart.addBodyPart(part1);
 
         BodyPart attachment = null;
@@ -113,7 +114,7 @@ public class SendEmailWithAttachments {
         
         byte[] attachmentData = CalenderInviteService.calendarAsByteArray(calender);
         
-        MultiPartEmail email = new MultiPartEmail();
+        HtmlEmail email = new HtmlEmail();
 		email.setHostName("smtp.googlemail.com");
 		email.setSmtpPort(465);
 
@@ -121,7 +122,7 @@ public class SendEmailWithAttachments {
 			email.addTo(to);
 			email.setFrom(from);
 			email.setSubject(subject);
-			email.setMsg(text);
+			email.setHtmlMsg(text);
 			email.setAuthenticator(new DefaultAuthenticator("ishan@bsb.in", ""));
 			email.setSSLOnConnect(true);
 

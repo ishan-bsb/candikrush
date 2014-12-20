@@ -37,32 +37,34 @@ public class SendMailService {
 		String formAction = generateFormResponseUrl();
 		
 		String mailerContent =  getMailer(candidate.getSummary(), formAction, candidateId);
-		List<String> attachment = new ArrayList<String>();
-		attachment.add(candidate.getCvPath());
 		if(timeStampinMillis > System.currentTimeMillis()){
+			List<String> attachment = new ArrayList<String>();
+			attachment.add(candidate.getCvPath());
+			
 			SendEmailWithAttachments.sendICSMail(from, to, mailSubject, mailerContent, timeStampinMillis, durationinMillis, attachment);
 		}
 		else{
-			SendEmailWithAttachments.sendMultiPartMail(from, to, "", mailSubject, mailerContent,  (String[]) attachment.toArray());
+			String[] arr = {candidate.getCvPath()};
+			SendEmailWithAttachments.sendMultiPartMail(from, to, CC_MAIL_ID, mailSubject, mailerContent,  arr);
 		}
 	}
 	
 	private String getMailer(String summary, String form_action, String candidateId){
-		String mailer = "<html><body><table align='center' border='2' style='width: 100%;'><tbody><tr><td>"
-				+summary+"</td></tr><tr><td><table border='1' style='width: 100%'><tbody><tr><td><form action='"+form_action+
-				"method='post'>"+"<input type='textarea' name='comments'>Review Comments</input>"
-				+ "<input type='hidden' name='id' value='"+ candidateId +"'></></td></tr></tbody></table><table border='1' "
-				+ "style='width: 100%;'><tbody><tr><td><input type='radio' name='result' value='fail'>Reject</td><td>"
-				+ "<input type='radio' name='result' value='pass' "
-				+ "checked>Proceed Further</td></tr></form></tbody></table></td></tr></tbody></table>"+
-				 "</body></html>";
+		String mailer = "<html><body><TABLE width='100%' border='2' cellspacing='0' cellpadding='0'><tr>"
+				+ "<td>"+summary+"</td></tr><tr><td><FORM action="+form_action+" method='POST'>"
+				+ "<input type='textarea' name='remarks' value='Review Comments'>"
+				+ "</input><br/><INPUT type='radio' name='result' value='fail'>"
+				+ "Reject<input type='hidden' name='candidateId' value='"+ candidateId +"'>"
+				+ "<INPUT type='radio' name='result' value='pass'>pass<br/>"
+				+ "<button type='submit' value='submit'>Submit</button></FORM>"
+				+ "</td></tr></TABLE></body></html>";
 		
 		return mailer;
 	}
 	
 	private String generateFormResponseUrl(){
 		String baseApiUrl = propertyReader.loadProperty("baseApiUrl");
-		String stateChangeApi = baseApiUrl +"changeState";
+		String stateChangeApi = baseApiUrl;
 		return stateChangeApi;
 	}
 	

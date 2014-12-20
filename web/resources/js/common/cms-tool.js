@@ -26,25 +26,24 @@ $(document).ready(function() {
 	
 	function loadDatePickers() {
 		if($('#date_startdate') !== undefined && $('#date_startdate').length > 0) {
-			$('#date_startdate').datepicker({
-				format : 'dd M yyyy',
+			$('#date_startdate').datetimepicker({
+				format : 'yyyy-mm-dd hh:ii',
 				autoclose: true,
 				onRender: function(date) {
 							var nowTemp = new Date();
-							var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-							return date.valueOf();// > now.valueOf() ? 'disabled' : '';
+							return nowTemp.getMilliseconds();
+							
 						  }
 			});
 		}
 		
 		if($('#date_enddate') !== undefined && $('#date_enddate').length > 0) {
 			$('#date_enddate').datepicker({ 
-				format : 'dd M yyyy',
+				format : 'yyyy-mm-dd hh:ii',
 				autoclose: true,
 				onRender: function(date) {
 							var nowTemp = new Date();
-							var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-							return date.valueOf();// > now.valueOf() ? 'disabled' : '';
+							return nowTemp.getMilliseconds();
 						  }
 			});
 		}
