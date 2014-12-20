@@ -4,7 +4,7 @@ import org.springframework.util.StringUtils;
 
 public enum CvState {
 
-    UPLOAD("Resume uploaded successfully"), REFRESHED(""), HR_REJECT("Resume Rejected @Hr screening"), TECH_SCREEN_SCH("Please screen the candidate"),  TECH_SCREEN_REJECT("Resume Rejected @Tech screening"), TECH_SCREEN_CLEAR("Resume Passed HR screening"), INT_SCH("Interview scheduled"), INT_REJECT("Interview Reject"), OFFER("Offer Proccessed"), HOLD("Offer on hold");
+    UPLOAD("Resume uploaded successfully"), REFRESHED(""), HR_REJECT("Resume Rejected @Hr screening"), TECH_SCREEN_SCH("Please screen the candidate"),  TECH_SCREEN_REJECT("Resume Rejected @Tech screening"), TECH_SCREEN_CLEAR("Resume Passed HR screening"), INT_SCH("Interview scheduled"), INT_REJECT("Interview Reject"), INT_CLEAR("Interview Cleared"), OFFER("Offer Proccessed"), HOLD("Offer on hold");
 
     private final String mail_subject;
     
@@ -56,12 +56,20 @@ public enum CvState {
 		}
 		else if(INT_SCH == currentState){
 			if(proceedToNextRound){
-				return INT_SCH;
+				return INT_CLEAR;
 			}
 			else{
 				return INT_REJECT;
 			}
 		}
+		else if(INT_CLEAR == currentState){
+            if(proceedToNextRound){
+                return INT_SCH;
+            }
+            else{
+                return HR_REJECT;
+            }
+        }
 		return HR_REJECT;
 	}
 	

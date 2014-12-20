@@ -69,6 +69,11 @@ public class LoginController {
 	@RequestMapping("/getFreshCandidateDashboard")
 	public ModelAndView getFreshCandidateDashboard() {
 	    ModelAndView mv = getFreshCandidate();
+	    if(mv.isEmpty()){
+            mv.addObject("isEmpty", true);
+        }else{
+            mv.addObject("isEmpty", false);
+        }
 	    mv.addObject("pageId", "freshcandidatedashboard");
 	    mv.setViewName("hr/freshCandidateDashboard");
 	    return mv;
@@ -117,10 +122,20 @@ public class LoginController {
         ModelAndView mv = new ModelAndView();
         if("freshcandidatedashboard".equalsIgnoreCase(pageId)){
             mv = getFreshCandidate();
+            if(mv.isEmpty()){
+                mv.addObject("isEmpty", true);
+            }else{
+                mv.addObject("isEmpty", false);
+            }
             mv.addObject("pageId", "freshcandidatedashboard");
             mv.setViewName("hr/freshCandidateDashboard");
         }else if("screenedcandidatedashboard".equalsIgnoreCase(pageId)){
             mv = getScreenedCandidate();
+            if(mv.isEmpty()){
+                mv.addObject("isEmpty", true);
+            }else{
+                mv.addObject("isEmpty", false);
+            }
             mv.addObject("pageId", "screenedcandidatedashboard");
             mv.setViewName("hr/screenedCandidateDashboard");
         }else{
@@ -136,6 +151,11 @@ public class LoginController {
 	@RequestMapping("/getScreenedCandidateDashboard")
     public ModelAndView getScreenedCandidateDashboard() {
         ModelAndView mv = getScreenedCandidate();
+        if(mv.isEmpty()){
+            mv.addObject("isEmpty", true);
+        }else{
+            mv.addObject("isEmpty", false);
+        }
         mv.addObject("pageId", "screenedcandidatedashboard");
         mv.setViewName("hr/screenedCandidateDashboard");
         return mv;
@@ -145,7 +165,7 @@ public class LoginController {
         ModelAndView mv = new ModelAndView();
          List<CvState> states = new ArrayList<>();
          states.add(CvState.TECH_SCREEN_CLEAR);
-         states.add(CvState.INT_SCH);
+         states.add(CvState.INT_CLEAR);
          Candidate latestCandidate = candidateApiService.getLatestCandidateData(states);
          if(latestCandidate != null){
              mv.addObject("candidateId", latestCandidate.getId());

@@ -12,7 +12,14 @@
 </script>
 <body>
 
+	<a href="/candikrush/home">Go back to home</a><br/><br/>
 	<div id="mainDiv" style="padding-left: 200px;">
+		<div id="notificationBar">
+			<c:if test="${isEmpty eq true}">
+				<b style="color: red;">No entry found!</b><br/><br/>
+			</c:if>
+		</div>
+    	
     	<b>Name:</b> <c:out value="${candidateName}"></c:out><br/><br/>
     	<b>Location:</b> <c:out value="${location}"></c:out><br/><br/>
     	
@@ -36,16 +43,18 @@
 	    						<option value="ravikant@bsb.in">Ravikant Bhargava</option>
 	    					</select>
 	    				</td>
+	    			</tr>
+	    			<tr>
 	    				<td>
-	    				<input type="textarea" id="remarks" name="remarks" value=""/>
-	    				</td>
-	    				<td>
-	    					<input type="submit" id="assignButton" value="Assign"/>
+	    					Remarks: <input type="textarea" id="remarks" name="remarks" value=""/>
 	    				</td>
 	    			</tr>
 	    			<tr>
 	    				<td><input type="radio" id="result1" name="result" value="fail">Reject</td>
 	    				<td><input type="radio" id="result2" name="result" value="pass">Proceed Further</td>
+	    			</tr>
+	    			<tr>
+	    				<td><input type="submit" id="assignButton" value="Submit"/></td>
 	    			</tr>
 	    		</table>
 	    	</form>	

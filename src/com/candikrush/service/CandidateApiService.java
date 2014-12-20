@@ -78,10 +78,19 @@ public class CandidateApiService {
             updateCandidateStateInDb(candidate, assigneeId, finalNextState, remarks);
             if(proceedToNextRound){
                 //TODO: make an entry in schedule collection
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Date schDateTime = sdf.parse(schTime);
+                long schTimeInMillis = 0;
+                if(StringUtils.hasText(schTime)){
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        Date schDateTime = sdf.parse(schTime);
+                        schTimeInMillis = schDateTime.getTime();
+                    }
+                    catch (Exception e) {
+                        
+                    }
+                }
                 //TODO: what about duration of interview
-                sendMailService.sendNotificationEmail(HR_MAIL_ID, assigneeId, candidateId, schDateTime.getTime(), 3600000);
+                sendMailService.sendNotificationEmail(HR_MAIL_ID, assigneeId, candidateId, schTimeInMillis, 3600000);
             }
         }
         catch (Exception e) {
