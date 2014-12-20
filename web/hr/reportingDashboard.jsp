@@ -1,18 +1,22 @@
-<html>
-	<head>
-		<title>Home Dashboard</title>
-	</head>
-
-	<script type="text/javascript">
-	 		
-	</script>
-	
-	<body>Month : 
-		<table>
-			<tr>
-				<td><a href="/candikrush/getFreshCandidateDashboard">Click here to see fresh candidates</a></td>
-				<td><a href="/candikrush/getScreenedCandidateDashboard">Click here to see screened candidates</a></td>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="../common/header.jsp"%>
+<div class="container page_content">
+		<div id="main-container" class="container">
+			<h2 style="font-size:30px">Reports for Month : <c:out escapeXml="false" value="${date}"></c:out></h2>
+ 
+		<table class="table table-bordered"><tbody>
+		<tr>
+				<th>User Id</th>
+				<th> Total Cases</th>
+				<th>Success Cases</th>
 			</tr>
+		<c:forEach var="rep1" items="${rep}">
+			<tr>
+				<td><c:out escapeXml="false" value="${rep1.userId}"></c:out></td>
+				<td><c:out escapeXml="false" value="${rep1.total}"></c:out></td>
+				<td><c:out escapeXml="false" value="${rep1.success}"></c:out></td>
+			</tr>
+		</c:forEach>
+		</tbody>
 		</table>
-	</body>
-</html>
+<%@ include file="../common/footer.jsp"%>
