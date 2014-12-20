@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,11 +49,13 @@ public class CVParsingService {
     private final RestTemplate restApi              = new RestTemplate();
 
     private final String       hr                   = "jasdeep@bsb.in";
+    
+    private final String tomcat = "/Users/jasdeep/Desktop/tomcat/";
 
     List<CvState>              nonRefreshableStates = Arrays.asList(CvState.INT_SCH, CvState.TECH_SCREEN_CLEAR, CvState.TECH_SCREEN_SCH, CvState.HOLD, CvState.OFFER);
 
     @Scheduled(fixedDelay = 10000)
-    private void processResumes() {
+    private void processResumes() throws Exception {
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
@@ -60,6 +63,10 @@ public class CVParsingService {
             processCV(parsed, resume.getFilePath(), resume.getEmail(), resume.getCreationDate(), resume.getCctc(), resume.getEctc(), resume.getNoticePeriod());
             resume.setProcessed(true);
             mongoCMSDB.save(resume);
+            File in = new File(resume.getFilePath());
+            in.toPath();
+            File out = new File(tomcat+"webapps/resumes/"+fileName);
+            Files.copy(in.toPath(), out.toPath());
         }
     }
 

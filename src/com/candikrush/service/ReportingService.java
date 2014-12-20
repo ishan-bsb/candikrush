@@ -21,18 +21,17 @@ public class ReportingService {
     private MongoTemplate mongoCMSDB;
 
     public List<Reporting> getReports(UserType type, int monthsOld) {
-        Calendar cal = getMonthStart();
-        cal.add(Calendar.MONTH, -monthsOld);
-        return mongoCMSDB.find(Query.query(Criteria.where("cycleTimestamp").is(cal.getTimeInMillis()).and("userType").is(type)), Reporting.class);
+        long time = getMonthStart(monthsOld);
+        return mongoCMSDB.find(Query.query(Criteria.where("cycleTimestamp").is(time).and("userType").is(type)), Reporting.class);
     }
 
     public void updateTotal(String sourceId) {
         CKUser user = mongoCMSDB.findOne(Query.query(Criteria.where("email").is(sourceId)), CKUser.class);
-        Calendar cal = getMonthStart();
+        long cal = getMonthStart(0);
         Reporting rep = mongoCMSDB.findOne(Query.query(Criteria.where("userId").is(sourceId)), Reporting.class);
         if(null == rep) {
             rep = new Reporting();
-            rep.setCycleTimestamp(cal.getTimeInMillis());
+            rep.setCycleTimestamp(cal);
             rep.setSuccess(0);
             rep.setTotal(1);
             rep.setUserId(sourceId);
@@ -44,11 +43,11 @@ public class ReportingService {
 
     public void updateSuccess(String sourceId) {
         CKUser user = mongoCMSDB.findOne(Query.query(Criteria.where("email").is(sourceId)), CKUser.class);
-        Calendar cal = getMonthStart();
+        long cal = getMonthStart(0);
         Reporting rep = mongoCMSDB.findOne(Query.query(Criteria.where("userId").is(sourceId)), Reporting.class);
         if(null == rep) {
             rep = new Reporting();
-            rep.setCycleTimestamp(cal.getTimeInMillis());
+            rep.setCycleTimestamp(cal);
             rep.setSuccess(1);
             rep.setTotal(1);
             rep.setUserId(sourceId);
@@ -58,7 +57,7 @@ public class ReportingService {
         mongoCMSDB.save(rep);
     }
 
-    private Calendar getMonthStart() {
+    public long getMonthStart(int monthsOld) {
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -67,7 +66,10 @@ public class ReportingService {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        return cal;
+        System.out.println(cal.getTimeInMillis());
+        cal.add(Calendar.MONTH, -monthsOld);
+        System.out.println(cal.getTimeInMillis());
+        return cal.getTimeInMillis();
     }
 
 }

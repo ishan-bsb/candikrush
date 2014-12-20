@@ -69,7 +69,7 @@ public class CandidateApiService {
         }
     }
 
-    public void changeState(String candidateId, String assigneeId, String nextState, String remarks, String result, String schTime) {
+    public void changeState(String candidateId, String assigneeId, String nextState, String remarks, String result, String schTime, String username) {
         try {
             Candidate candidate = getCandidateFromId(candidateId);
             if(candidate == null) {
@@ -80,7 +80,7 @@ public class CandidateApiService {
                 proceedToNextRound = true;
             }
             CvState finalNextState = CvState.getNextState(candidate.getCurrentState(), proceedToNextRound, CvState.getCVStateFromString(nextState));
-            updateCandidateStateInDb(candidate, assigneeId, finalNextState, remarks);
+            updateCandidateStateInDb(candidate, assigneeId, finalNextState, remarks, username);
             if(proceedToNextRound){
                 //TODO: make an entry in schedule collection
                 long schTimeInMillis = 0;
@@ -103,11 +103,11 @@ public class CandidateApiService {
         }
     }
 
-    public void updateCandidateStateInDb(Candidate candidate, String assignee, CvState nextState, String remarks) {
+    public void updateCandidateStateInDb(Candidate candidate, String assignee, CvState nextState, String remarks, String username) {
         // To update in candidate collection and in interview collection
         // TODO: uncomment following before committing...test it once with reporting collection
         
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CKUser user = loginService.getUserFromUserName(username);
 
         reportingService.updateTotal(user.getEmail());
