@@ -1,6 +1,7 @@
 package com.candikrush.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +22,10 @@ import com.candikrush.common.UserType;
 import com.candikrush.dto.CKUser;
 import com.candikrush.dto.Candidate;
 import com.candikrush.dto.CvState;
+import com.candikrush.dto.Reporting;
 import com.candikrush.service.CandidateApiService;
 import com.candikrush.service.LoginService;
+import com.candikrush.service.ReportingService;
 import com.candikrush.service.UserApiService;
 
 @Controller
@@ -142,6 +145,22 @@ public class LoginController {
         }
         mv.addObject("pageId", "screenedcandidatedashboard");
         mv.setViewName("hr/screenedCandidateDashboard");
+        return mv;
+    }
+	
+	@Autowired
+    private ReportingService reportingService;
+
+    @RequestMapping(value = "/displayReports", method = RequestMethod.GET)
+    public ModelAndView getReports(@RequestParam("userType") String userType, @RequestParam("monthsOld") Integer monthsOld) {
+        List<Reporting> rep = reportingService.getReports(UserType.valueOf(userType), monthsOld);
+        ModelAndView mv = new ModelAndView();
+        if(rep != null && !rep.isEmpty()) {
+            long time = rep.get(0).getCycleTimestamp();
+            mv.addObject("date", ""+(new Date(time)));
+            mv.addObject("rep", rep);
+        }
+        mv.setViewName("hr/reportingDashboard");
         return mv;
     }
 	
