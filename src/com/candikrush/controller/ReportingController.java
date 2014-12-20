@@ -20,13 +20,13 @@ public class ReportingController {
     @Autowired
     private ReportingService reportingService;
 
-    @RequestMapping(value = "/getReports", method = RequestMethod.GET)
+    @RequestMapping(value = "/display", method = RequestMethod.GET)
     public ModelAndView getReports(@RequestParam("userType") String userType, @RequestParam("monthsOld") Integer monthsOld) {
         List<Reporting> rep = reportingService.getReports(UserType.valueOf(userType), monthsOld);
         ModelAndView mv = new ModelAndView();
         if(rep != null) {
             long time = rep.get(0).getCycleTimestamp();
-            mv.addObject("date", new Date(time));
+            mv.addObject("date", ""+(new Date(time)));
             mv.addObject("rep", rep);
         }
         mv.setViewName("hr/homeDashboard");

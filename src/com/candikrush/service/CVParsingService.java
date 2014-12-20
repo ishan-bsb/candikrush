@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -34,22 +35,24 @@ import com.candikrush.utils.XMLUtils;
 @Service
 public class CVParsingService {
 
-    private Logger           logger  = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
+    private Logger             logger               = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
 
-    private final String     url     = "http://localhost:3131/v1/cv/parse?fileName=%s&filePath=%s";
-
-    @Autowired
-    private MongoTemplate    mongoCMSDB;
+    private final String       url                  = "http://localhost:3131/v1/cv/parse?fileName=%s&filePath=%s";
 
     @Autowired
-    private ReportingService reportingService;
+    private MongoTemplate      mongoCMSDB;
 
-    RestTemplate             restApi = new RestTemplate();
+    @Autowired
+    private ReportingService   reportingService;
+
+    private final RestTemplate restApi              = new RestTemplate();
+
+    private final String       hr                   = "jasdeep@bsb.in";
+
+    List<CvState>              nonRefreshableStates = Arrays.asList(CvState.INT_SCH, CvState.TECH_SCREEN_CLEAR, CvState.TECH_SCREEN_SCH, CvState.HOLD, CvState.OFFER);
 
     @Scheduled(fixedDelay = 10000)
     private void processResumes() {
-        // createTestResume();
-        // createTestSchedule();
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
@@ -93,14 +96,19 @@ public class CVParsingService {
         }
         else {
             Candidate cand = updateExisting(sourceId, cctc, ectc, np, email, msisdn);
-            sendRefreshNotificationToHR(cand);
-            sendDuplicateNotificationToSource(cand, sourceId);
+            if(null != cand) {
+                sendRefreshNotificationToHR(cand);
+                sendDuplicateNotificationToSource(cand, sourceId);
+            }
         }
         return true;
     }
 
     private Candidate updateExisting(String sourceId, int cctc, int ectc, int np, String email, String msisdn) {
         Candidate cand = mongoCMSDB.findOne(Query.query(Criteria.where("email").is(email).orOperator(Criteria.where("phone").is(msisdn))), Candidate.class);
+        if(nonRefreshableStates.contains(cand.getCurrentState())) {
+            return null;
+        }
         cand.setCurrentState(CvState.REFRESHED);
         long time = System.currentTimeMillis();
         cand.setLastupdateTimestamp(time);
@@ -155,9 +163,10 @@ public class CVParsingService {
     }
 
     private void sendRefreshNotificationToHR(Candidate cand) {
+        String hr = "namita@bsb.in";
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", "namita@bsb.in", "", cand.getName() + " re - applied in BSB", "Candidate location " + cand.getLocation() + "<br> Summary<br>"
-                    + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "", cand.getName() + " re - applied in BSB",
+                    "Candidate location " + cand.getLocation() + "<br> Summary<br>" + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -175,8 +184,8 @@ public class CVParsingService {
 
     private void sendNotificationEmailToHr(Candidate cand) {
         try {
-            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", "namita@bsb.in", "", cand.getName() + " has applied in BSB", "Candidate location " + cand.getLocation() + "<br> Summary<br>"
-                    + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", hr, "", cand.getName() + " has applied in BSB",
+                    "Candidate location " + cand.getLocation() + "<br> Summary<br>" + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +196,9 @@ public class CVParsingService {
         List<String> schools = XMLUtils.getValues(rootElement, "SchoolName");
         List<String> companies = XMLUtils.getValues(rootElement, "EmployerOrgName");
         List<String> skills = XMLUtils.getAttributeValues(rootElement, "Competency", "Name");
-        StringBuilder summary = new StringBuilder("<table style='width:100%'><tr><td>Skills</td><td>");
+        String name = XMLUtils.getValue(rootElement, "FullName");
+        String location = XMLUtils.getValue(rootElement, "City");
+        StringBuilder summary = new StringBuilder("<table style='width:100%'><tr><td>Name</td><td>" + name + "</td></tr><tr><td>Location</td><td>" + location + "</td></tr><tr><td>Skills</td><td>");
         for(String skill : skills) {
             summary.append(skill + ", ");
         }

@@ -11,9 +11,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.candikrush.dto.CKUser;
 import com.candikrush.dto.Candidate;
 import com.candikrush.dto.CvState;
 import com.candikrush.dto.CvStateDescription;
@@ -23,12 +25,15 @@ public class CandidateApiService {
 
     @Autowired
     private MongoTemplate       mongoCMSDB;
-    
+
     @Autowired
     private SendMailService     sendMailService;
 
     @Autowired
     private ReportingService    reportingService;
+
+    @Autowired
+    private LoginService        loginService;
 
     private static final String SELECTED_RADIO = "pass";
     private static final String HR_MAIL_ID     = "hr@bsb.in";
@@ -98,18 +103,26 @@ public class CandidateApiService {
         }
     }
 
-    public void updateCandidateStateInDb(Candidate candidate, String assignee, CvState nextState, String remarks){
-        //To update in candidate collection and in interview collection
-      //TODO: uncomment following before committing...test it once with reporting collection
-        /*reportingService.updateTotal(assignee);
+    public void updateCandidateStateInDb(Candidate candidate, String assignee, CvState nextState, String remarks) {
+        // To update in candidate collection and in interview collection
+        // TODO: uncomment following before committing...test it once with reporting collection
+        
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CKUser user = loginService.getUserFromUserName(username);
+
+        reportingService.updateTotal(user.getEmail());
+        if(CvState.TECH_SCREEN_SCH.equals(nextState)) {
+            reportingService.updateSuccess(candidate.getSourceUserId());
+        }
         if(!(CvState.HR_REJECT.equals(nextState) || CvState.TECH_SCREEN_REJECT.equals(nextState) || CvState.INT_REJECT.equals(nextState))) {
-            reportingService.updateSuccess(assignee);
-        }*/
+            reportingService.updateSuccess(user.getEmail());
+        }
+
         candidate.setCurrentState(nextState);
         CvStateDescription historyElem = new CvStateDescription();
         historyElem.setState(nextState);
         if(!StringUtils.hasText(remarks)) {
-            remarks = "State changed"; 
+            remarks = "State changed";
         }
         historyElem.setRemarks(remarks);
         historyElem.setTimestamp(System.currentTimeMillis());
