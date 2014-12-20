@@ -60,7 +60,6 @@ public class LoginController {
 		     logger.debug("logged in by an HR: "+user.getUsername());
 		     ModelAndView mv = getFreshCandidate();
 		     mv.setViewName("hr/homeDashboard");
-		     //mv.setViewName("hr/schedule");
 		     return mv;
 		 }
 		 return new ModelAndView("login/home");
@@ -87,31 +86,15 @@ public class LoginController {
          Candidate latestCandidate = candidateApiService.getLatestCandidateData(states);
          if(latestCandidate != null){
              mv.addObject("candidateId", latestCandidate.getId());
-             mv.addObject("candidateName", latestCandidate.getName());
-             mv.addObject("location", latestCandidate.getLocation());
+             //mv.addObject("candidateName", latestCandidate.getName());
+             //mv.addObject("location", latestCandidate.getLocation());
              mv.addObject("summary", latestCandidate.getSummary());
              mv.addObject("resumeLink", latestCandidate.getCvPath());
          }
          return mv;
     }
 	
-    /*@RequestMapping(value="/assignCandidate", method = RequestMethod.POST)
-	public ModelAndView assignCandidate(@RequestParam("interviewerId") String interviewerId, 
-            @RequestParam("candidateId1") String candidateId) {
-	    candidateApiService.assignForInterview(candidateId, interviewerId);
-	    ModelAndView mv = getFreshCandidate();
-        mv.setViewName("hr/freshCandidateDashboard");
-        return mv;
-	}
-	@RequestMapping(value="/rejectCandidate", method = RequestMethod.POST)
-	public ModelAndView rejectCandidate(@RequestParam("candidateId2") String candidateId) {
-        candidateApiService.rejectInterview(candidateId);
-        ModelAndView mv = getFreshCandidate();
-        mv.setViewName("hr/freshCandidateDashboard");
-        return mv;
-    }*/
-	
-	@RequestMapping(value="/changeState", method = RequestMethod.POST)
+    @RequestMapping(value="/changeState", method = RequestMethod.POST)
     public ModelAndView changeState(@RequestParam("candidateId") String candidateId, 
                 @RequestParam(required=false, value="assigneeId") String assigneeId, @RequestParam(required=false, value="nextState") String nextState, 
                 @RequestParam(required=false, value="remarks") String remarks, @RequestParam("result") String result, 
@@ -169,8 +152,8 @@ public class LoginController {
          Candidate latestCandidate = candidateApiService.getLatestCandidateData(states);
          if(latestCandidate != null){
              mv.addObject("candidateId", latestCandidate.getId());
-             mv.addObject("candidateName", latestCandidate.getName());
-             mv.addObject("location", latestCandidate.getLocation());
+             //mv.addObject("candidateName", latestCandidate.getName());
+             //mv.addObject("location", latestCandidate.getLocation());
              mv.addObject("summary", latestCandidate.getSummary());
              mv.addObject("resumeLink", latestCandidate.getCvPath());
          }
