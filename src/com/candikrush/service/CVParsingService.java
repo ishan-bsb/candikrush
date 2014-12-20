@@ -27,25 +27,29 @@ import com.candikrush.dto.CvStateDescription;
 import com.candikrush.dto.Schedule;
 import com.candikrush.dto.ScheduleType;
 import com.candikrush.dto.UploadedResumeDetails;
+import com.candikrush.helpers.SendEmailWithAttachments;
 import com.candikrush.utils.Utils;
 import com.candikrush.utils.XMLUtils;
 
 @Service
 public class CVParsingService {
 
-    private Logger        logger  = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
+    private Logger           logger  = LoggerFactory.getLogger(CVParsingService.class.getCanonicalName());
 
-    private final String  url     = "http://localhost:3131/v1/cv/parse?fileName=%s&filePath=%s";
+    private final String     url     = "http://localhost:3131/v1/cv/parse?fileName=%s&filePath=%s";
 
     @Autowired
-    private MongoTemplate mongoCMSDB;
+    private MongoTemplate    mongoCMSDB;
 
-    RestTemplate          restApi = new RestTemplate();
+    @Autowired
+    private ReportingService reportingService;
+
+    RestTemplate             restApi = new RestTemplate();
 
     @Scheduled(fixedDelay = 10000)
     private void processResumes() {
-        //createTestResume();
-        createTestSchedule();
+        // createTestResume();
+        // createTestSchedule();
         List<UploadedResumeDetails> resumes = mongoCMSDB.find(Query.query(Criteria.where("processed").is(false)), UploadedResumeDetails.class);
         for(UploadedResumeDetails resume : resumes) {
             String fileName = getFileName(resume.getFilePath());
@@ -54,18 +58,6 @@ public class CVParsingService {
             resume.setProcessed(true);
             mongoCMSDB.save(resume);
         }
-    }
-
-    private void createTestSchedule() {
-        Schedule sch = new Schedule();
-        sch.setCandId("ram@ymail.com");
-        sch.setEndTimestamp(78787878L);
-        sch.setReviewerId("shyam@ymail.com");
-        sch.setStartTimestamp(78978);
-        sch.setSchedulederId("karan@ymail.com");
-        sch.setScheduleTimestamp(899);
-        sch.setScheduleType(ScheduleType.INTERVIEW);
-        mongoCMSDB.save(sch);
     }
 
     private String getFileName(String filePath) {
@@ -93,9 +85,9 @@ public class CVParsingService {
         String msisdn = XMLUtils.getValue(rootElement, "phone_Mobile");
         msisdn = Utils.get10DigitMsisdn(msisdn.trim());
         String name = XMLUtils.getValue(rootElement, "FullName");
+        reportingService.updateTotal(sourceId);
         if(!checkForDuplicateEmailPhone(email, msisdn)) {
             Candidate cand = createNewCandidate(path, sourceId, postTimestamp, rootElement, email, msisdn, name, cctc, ectc, np);
-            mongoCMSDB.save(cand);
             sendNotificationEmailToHr(cand);
             sendNotificationToSource(cand);
         }
@@ -149,26 +141,46 @@ public class CVParsingService {
         cand.setEctc(ectc);
         cand.setCctc(cctc);
         cand.setNp(np);
+        mongoCMSDB.save(cand);
         return cand;
     }
 
     private void sendDuplicateNotificationToSource(Candidate cand, String sourceId) {
-        // TODO Auto-generated method stub
-
+        try {
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), cand.getName() + " already applied in BSB", "", "", new String[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendRefreshNotificationToHR(Candidate cand) {
-        // TODO Auto-generated method stub
-
+        try {
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", "namita@bsb.in", "", cand.getName() + " re - applied in BSB", "Candidate location " + cand.getLocation() + "<br> Summary<br>"
+                    + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendNotificationToSource(Candidate cand) {
-        // TODO Auto-generated method stub
-
+        try {
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", cand.getSourceUserId(), cand.getName() + " application accepted in BSB", "", "", new String[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendNotificationEmailToHr(Candidate cand) {
-        // TODO
+        try {
+            SendEmailWithAttachments.sendMultiPartMail("info@bsb.in", "namita@bsb.in", "", cand.getName() + " has applied in BSB", "Candidate location " + cand.getLocation() + "<br> Summary<br>"
+                    + cand.getSummary() + "<br> ECTC : " + cand.getEctc(), new String[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String generateSummary(Element rootElement) {
@@ -213,6 +225,18 @@ public class CVParsingService {
         mongoCMSDB.save(res);
     }
 
+    private void createTestSchedule() {
+        Schedule sch = new Schedule();
+        sch.setCandId("ram@ymail.com");
+        sch.setEndTimestamp(78787878L);
+        sch.setReviewerId("shyam@ymail.com");
+        sch.setStartTimestamp(78978);
+        sch.setSchedulederId("karan@ymail.com");
+        sch.setScheduleTimestamp(899);
+        sch.setScheduleType(ScheduleType.INTERVIEW);
+        mongoCMSDB.save(sch);
+    }
+
     private byte[] loadFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
         long length = file.length();
@@ -234,7 +258,8 @@ public class CVParsingService {
     public static void main(String[] args) throws Exception {
         CVParsingService ps = new CVParsingService();
         String resumeXml = ps.getParsedResume("/Users/jasdeep/Downloads/BSB final resumes 2/Anshul Sharma_new-2.pdf", "Anshul Sharma_new-2.pdf");
-//        String resumeXml = new String(ps.loadFile(new File("/Users/jasdeep/Desktop/anshul.xml")));
+        // String resumeXml = new String(ps.loadFile(new
+        // File("/Users/jasdeep/Desktop/anshul.xml")));
         ps.processCV(resumeXml, "/Users/jasdeep/Desktop/anshul.xml", "jasdeep@bsb.in", 0L, 400000, 600000, 60);
     }
 }
