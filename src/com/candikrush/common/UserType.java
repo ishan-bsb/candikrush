@@ -2,6 +2,6 @@ package com.candikrush.common;
 
 public enum UserType {
 	
-	CONSULTANT, HR, EMPLOYEE;
+	CONSULTANT, HR, INTERVIEWER;
 	
 }
