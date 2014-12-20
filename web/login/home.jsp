@@ -1,22 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="shortcut icon" href="<c:url value="../resources/img/favicon.ico" />">
+<%@ include file="../common/header.jsp"%>
 
-<title>Sign in CMS</title>
 
-<link type="text/css" href="<c:url value="../resources/css/bootstrap.css" />"rel="stylesheet">
-<link type="text/css" href="<c:url value="../resources/css/signin.css" />"rel="stylesheet">
-</head>
 
-<body>
-<div class="wrapper_outer">
-Hii
-<!-- header starts -->
-</div>
-</body>
+<div class="container page_content">
+		<div id="main-container" class="container">
+			<h2 style="font-size:30px">Welcome to CandiKrush</h2>
+			</div></div>
+<%@ include file="../common/footer.jsp"%>
