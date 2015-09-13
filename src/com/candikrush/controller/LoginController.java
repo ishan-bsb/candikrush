@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.candikrush.common.UserType;
@@ -36,7 +38,10 @@ public class LoginController {
 	
 	@Autowired 
 	private LoginService loginService;
-	
+
+    @Autowired
+    private UserApiService userApiService;
+
 	@Autowired 
     private CandidateApiService candidateApiService;
 	
@@ -46,8 +51,20 @@ public class LoginController {
 	public ModelAndView getloginPage(HttpServletRequest request, Model model) {
 		return new ModelAndView("login/login");
 	}
-	
-	@RequestMapping(value = { "", "home"})
+
+    @RequestMapping(value = { "createUser"})
+    public @ResponseBody String createUser(@RequestParam("username") String username,
+                                           @RequestParam(required=true, value="password") String password,
+                                           @RequestParam(required=false, value="roles") String role,
+                                           @RequestParam(required=true, value="type") String type) {
+
+        CKUser user = userApiService.createUser(username, password, Lists.newArrayList(role), UserType.valueOf(type));
+        return user.toString();
+    }
+
+
+
+    @RequestMapping(value = { "", "home"})
 	public ModelAndView gethomePage(HttpServletRequest request, Model model) {
 
 		 String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

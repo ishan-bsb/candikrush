@@ -23,6 +23,7 @@
 	
 	<!--  http pattern="/cms/login**" security="none" /--> 
 	<http pattern="/candikrush/login**" security="none" />
+	<http pattern="/candikrush/createUser**" security="none" />
 	<http pattern="/resources/css/signin.css" security="none" />
 	<!--http pattern="/candikrush/changeState**" security="none" /-->
 	<http pattern="/resources/css/bootstrap.css" security="none" />

@@ -23,7 +23,7 @@ import com.mongodb.MongoClient;
  * Server configurations.
  */
 @Configuration
-@ComponentScan({"com.bsb.portal"})
+@ComponentScan({"com.candikrush"})
 @PropertySource("classpath:environment.properties")
 @EnableWebMvc
 @EnableScheduling
